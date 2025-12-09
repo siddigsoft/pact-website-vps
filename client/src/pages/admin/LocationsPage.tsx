@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as locationsApi from '@/api/locations';
 import { useToast } from '@/hooks/use-toast';
-import type { LocationContent } from '../../../../shared/schema';
+import type { Location } from '../../../../shared/schema';
 
 // UI Components
 import {
@@ -34,7 +34,7 @@ interface FormData {
 
 export default function LocationsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState<LocationContent | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [formData, setFormData] = useState<FormData>({
     city: '',
     country: '',
@@ -75,7 +75,7 @@ export default function LocationsPage() {
   
   // Update location mutation
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<LocationContent> }) => 
+    mutationFn: ({ id, data }: { id: number; data: { city?: string; country?: string; address?: string; image?: File | string | null } }) => 
       locationsApi.updateLocation(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['locations'] });
@@ -125,7 +125,7 @@ export default function LocationsPage() {
     setSelectedLocation(null);
   };
   
-  const handleEdit = (location: LocationContent) => {
+  const handleEdit = (location: Location) => {
     setSelectedLocation(location);
     setFormData({
       city: location.city,
@@ -201,7 +201,7 @@ export default function LocationsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {locations.map((location: LocationContent) => (
+              {locations.map((location: Location) => (
                 <Card key={location.id} className="relative">
                   {location.image && (
                     <div className="relative h-48 overflow-hidden">

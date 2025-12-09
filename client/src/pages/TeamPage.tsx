@@ -11,13 +11,13 @@ interface TeamMember {
   position?: string;
   department?: string;
   location?: string;
-  bio: string;
+  bio?: string;
   expertise: string[];
-  image: string | null;
-  slug: string;
-  metaDescription: string | null;
+  image?: string | null;
+  slug?: string;
+  metaDescription?: string | null;
   email?: string;
-  linkedin: string;
+  linkedin?: string;
   services?: any[];
   contact?: {
     email?: string;
@@ -41,64 +41,55 @@ type TeamFilter = 'All' | 'Advisory Board' | string;
 
 // Team member card component
 const TeamMemberCard = ({ member }: { member: TeamMember }) => {
-  const [imgError, setImgError] = useState(false);
-  const getInitials = (name: string) => name.split(' ').map(n => n[0]).join('');
-  const getImagePath = (imagePath: string | null) => {
-    if (!imagePath) return undefined;
-    if (imagePath.startsWith('http')) {
-      return imagePath;
-    }
-    if (imagePath.includes('/uploads/team/')) {
-      return imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
-    }
-    return `/uploads/team/${imagePath}`;
-  };
-
+  const [isHovered, setIsHovered] = React.useState(false);
+  
   return (
-    <div style={{
-      border: '1px solid #e0e7ef', borderRadius: 12, background: '#fff', boxShadow: '0 2px 8px #0001',
-      display: 'flex', flexDirection: 'column', alignItems: 'stretch', padding: 0, margin: 8, minHeight: 340, maxWidth: 340, position: 'relative', overflow: 'hidden'
-    }}>
-      {/* Image - full width, fixed height */}
-      {member.image && !imgError ? (
-        <img
-          src={getImagePath(member.image)}
-          alt={member.name}
-          style={{ width: '100%', height: 400, objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
-          onError={() => setImgError(true)}
-        />
-      ) : (
-        <div style={{
-          width: '100%', height: 400, background: '#eee',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 48, color: '#888'
+    <div 
+      style={{
+        border: '1px solid #d1d5db', 
+        borderRadius: 0, 
+        background: isHovered ? '#f8fafc' : '#ffffff', 
+        boxShadow: 'none',
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'stretch', 
+        padding: '24px 20px', 
+        margin: 8, 
+        minHeight: 120,
+        width: '100%',
+        maxWidth: 340,
+        position: 'relative',
+        transition: 'all 0.2s ease-in-out',
+        borderLeft: isHovered ? '3px solid #1a3a5f' : '1px solid #d1d5db',
+        cursor: 'default'
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Name and Position */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8 }}>
+        <div style={{ 
+          fontWeight: 600, 
+          fontSize: 18, 
+          color: isHovered ? '#0f2847' : '#1a3a5f', 
+          lineHeight: 1.4,
+          letterSpacing: '-0.01em',
+          transition: 'color 0.2s ease-in-out'
         }}>
-          {getInitials(member.name)}
+          {member.name}
         </div>
-      )}
-      {/* Name, Position, Location */}
-      <div style={{ padding: '20px 20px 24px 20px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-        <div style={{ fontWeight: 700, fontSize: 20, color: '#1a2a3a', marginBottom: 4 }}>{member.name}</div>
-        {member.position && <div style={{ color: '#f97316', fontWeight: 500, marginBottom: 6 }}>{member.position}</div>}
-        {member.location && (
-          <div style={{ color: '#64748b', fontSize: 15, display: 'flex', alignItems: 'center' }}>
-            <span style={{ marginRight: 4 }}>📍</span>{member.location}
+        {member.position && (
+          <div style={{ 
+            color: isHovered ? '#475569' : '#64748b', 
+            fontWeight: 400, 
+            fontSize: 14,
+            lineHeight: 1.5,
+            transition: 'color 0.2s ease-in-out'
+          }}>
+            {member.position}
           </div>
         )}
       </div>
-      {/* Details link at bottom right */}
-      <a
-        href={`/team/${member.slug}`}
-        style={{
-          color: '#2563eb', fontWeight: 500, fontSize: 16, textDecoration: 'none',
-          position: 'absolute', right: 20, bottom: 18, display: 'flex', alignItems: 'center',
-        }}
-        onClick={e => {
-          e.preventDefault();
-          window.location.href = `/team/${member.slug}`;
-        }}
-      >
-        Details <span style={{ marginLeft: 4, fontSize: 18 }}>&#8594;</span>
-      </a>
     </div>
   );
 };
@@ -167,17 +158,17 @@ const TeamPage = () => {
     },
     // Keep data fresh, but avoid unnecessary refetches
     staleTime: 5 * 60 * 1000, // Data is considered fresh for 5 minutes
-    cacheTime: 10 * 60 * 1000, // Data stays in cache for 10 minutes
+    gcTime: 10 * 60 * 1000, // Data stays in cache for 10 minutes (previously cacheTime)
     refetchOnWindowFocus: false,
   });
 
   // Use the data from useQuery
-  const allTeamMembers = teamMembersData?.data || [];
+  const allTeamMembers: TeamMember[] = (teamMembersData as any)?.data || [];
 
   // Check for advisory members
   useEffect(() => {
     if (allTeamMembers.length > 0) {
-      const advisoryMembers = allTeamMembers.filter(member =>
+      const advisoryMembers = allTeamMembers.filter((member: TeamMember) =>
         member.position?.toLowerCase().includes('advisor') ||
         member.position?.toLowerCase().includes('advisory') ||
         member.department?.toLowerCase().includes('advisory')

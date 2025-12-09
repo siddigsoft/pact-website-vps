@@ -1,5 +1,19 @@
 import { apiClient } from './client';
-import type { LocationContent } from '../../../shared/schema';
+import type { Location } from '../../../shared/schema';
+
+type LocationInput = {
+  city: string;
+  country: string;
+  address: string;
+  image?: File | string | null;
+};
+
+type LocationUpdate = {
+  city?: string;
+  country?: string;
+  address?: string | null;
+  image?: File | string | null;
+};
 
 export const getLocations = async () => {
   const response = await apiClient.get('/locations');
@@ -11,17 +25,17 @@ export const getLocation = async (id: number) => {
   return response.data;
 };
 
-export const createLocation = async (data: Omit<LocationContent, 'id' | 'created_at' | 'updated_at'> & { image?: File | string | null }) => {
+export const createLocation = async (data: LocationInput) => {
   const formData = new FormData();
   
   // Handle image file
-  if (data.image && data.image instanceof File) {
-    formData.append('image', data.image);
+  if (data.image && typeof data.image !== 'string' && (data.image as any) instanceof File) {
+    formData.append('image', data.image as File);
   }
   
   // Add other fields
   Object.entries(data).forEach(([key, value]) => {
-    if (value && (key !== 'image' || !(value instanceof File))) {
+    if (value && (key !== 'image' || !((value as any) instanceof File))) {
       formData.append(key, value as string);
     }
   });
@@ -35,17 +49,17 @@ export const createLocation = async (data: Omit<LocationContent, 'id' | 'created
   return response.data;
 };
 
-export const updateLocation = async (id: number, data: Partial<LocationContent> & { image?: File | string | null }) => {
+export const updateLocation = async (id: number, data: LocationUpdate) => {
   const formData = new FormData();
   
   // Handle image file
-  if (data.image && data.image instanceof File) {
-    formData.append('image', data.image);
+  if (data.image && typeof data.image !== 'string' && (data.image as any) instanceof File) {
+    formData.append('image', data.image as File);
   }
   
   // Add other fields
   Object.entries(data).forEach(([key, value]) => {
-    if (value && (key !== 'image' || !(value instanceof File))) {
+    if (value && (key !== 'image' || !((value as any) instanceof File))) {
       formData.append(key, value as string);
     }
   });

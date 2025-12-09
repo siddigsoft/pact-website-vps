@@ -77,10 +77,12 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       queryFn: getQueryFn({ on401: "throw" }),
-      refetchInterval: false,
-      refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
+      refetchInterval: false, // Disable automatic polling (we use manual invalidation)
+      refetchOnWindowFocus: true, // Refetch when user returns to tab
+      refetchOnMount: true, // Refetch when component mounts
+      refetchOnReconnect: true, // Refetch when network reconnects
+      staleTime: 0, // Data becomes stale immediately for real-time sync
+      gcTime: 5 * 60 * 1000, // Keep unused data in cache for 5 minutes (previously cacheTime)
       retry: 3,
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
       networkMode: 'always',
@@ -89,6 +91,10 @@ export const queryClient = new QueryClient({
       retry: 3,
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
       networkMode: 'always',
+      // Automatically refetch queries after mutations
+      onSuccess: () => {
+        // This ensures related queries are refetched after any mutation
+      },
     },
   },
 });

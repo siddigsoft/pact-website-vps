@@ -62,6 +62,10 @@ export async function setupVite(app: Express, server: Server) {
       return next();
     }
 
+    if (url.startsWith("/uploads")) {
+      return next();
+    }
+
     if (url.endsWith('.map')) {
       return next();
     }

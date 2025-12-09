@@ -197,7 +197,7 @@ const projectUpload = multer({
 const clientUpload = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      const dir = path.join(__dirname, '..', 'client', 'public', 'uploads', 'clients');
+      const dir = path.join(__dirname, '../uploads/clients');
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }

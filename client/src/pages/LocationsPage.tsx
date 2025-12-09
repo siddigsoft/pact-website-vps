@@ -1,53 +1,27 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-
-import sudanImg from '@/assets/locations/sudan.jpg';
-import southSudanImg from '@/assets/locations/south-sudan.jpeg';
-import ugandaImg from '@/assets/locations/uganda.webp';
-import rwandaImg from '@/assets/locations/rwanda.jpg';
-import qatarImg from '@/assets/locations/qatar.jpg';
-import usaImg from '@/assets/locations/usa.jpg';
+import { useQuery } from '@tanstack/react-query';
+import * as locationsApi from '@/api/locations';
 
 interface Location {
-  name: string;
-  description: string;
-  imageUrl: string;
+  id: number;
+  city: string;
+  country: string;
+  image: string | null;
+  address: string | null;
+  created_at: string;
+  updated_at: string;
+  updated_by: number | null;
 }
 
-const locations: Location[] = [
-  {
-    name: 'Sudan',
-    description: 'Our operations in Sudan focus on humanitarian aid and development projects.',
-    imageUrl: sudanImg
-  },
-  {
-    name: 'South Sudan',
-    description: 'Supporting peacebuilding and community development initiatives.',
-    imageUrl: southSudanImg
-  },
-  {
-    name: 'Uganda',
-    description: 'Working on sustainable development and humanitarian assistance programs.',
-    imageUrl: ugandaImg
-  },
-  {
-    name: 'Rwanda',
-    description: 'Contributing to economic development and social welfare projects.',
-    imageUrl: rwandaImg
-  },
-  {
-    name: 'Qatar',
-    description: 'Regional coordination and strategic partnerships.',
-    imageUrl: qatarImg
-  },
-  {
-    name: 'USA',
-    description: 'Headquarters and international coordination center.',
-    imageUrl: usaImg
-  }
-];
-
 const LocationsPage: React.FC = () => {
+  // Fetch locations from API
+  const { data: locationsData, isLoading, error } = useQuery({
+    queryKey: ['locations'],
+    queryFn: locationsApi.getLocations
+  });
+
+  const locations = locationsData || [];
   return (
     <div className="pt-20 min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -78,10 +52,29 @@ const LocationsPage: React.FC = () => {
             </p>
           </div>
 
+          {isLoading && (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading locations...</p>
+            </div>
+          )}
+
+          {error && (
+            <div className="text-center py-12">
+              <p className="text-red-600">Failed to load locations. Please try again later.</p>
+            </div>
+          )}
+
+          {!isLoading && !error && locations.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No locations available at the moment.</p>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {locations.map((location, index) => (
+            {locations.map((location: Location, index: number) => (
               <motion.div
-                key={location.name}
+                key={location.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -89,14 +82,20 @@ const LocationsPage: React.FC = () => {
               >
                 <div className="aspect-w-16 aspect-h-9">
                   <img
-                    src={location.imageUrl}
-                    alt={location.name}
+                    src={location.image || '/placeholder-location.jpg'}
+                    alt={`${location.city}, ${location.country}`}
                     className="w-full h-40 sm:h-48 object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      if (!target.src.includes('placeholder')) {
+                        target.src = '/placeholder-location.jpg';
+                      }
+                    }}
                   />
                 </div>
                 <div className="p-4 sm:p-6">
-                  <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">{location.name}</h3>
-                  <p className="text-gray-600 text-sm sm:text-base">{location.description}</p>
+                  <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">{location.city}, {location.country}</h3>
+                  <p className="text-gray-600 text-sm sm:text-base">{location.address || 'Location details available upon request'}</p>
                 </div>
               </motion.div>
             ))}

@@ -105,18 +105,18 @@ export default function TeamPage() {
     serviceIds: [] as number[]
   });
 
-  // Get unique departments and locations
-  const departments = [...new Set(teamMembers.map(member => member.department))];
-  const locations = [...new Set(teamMembers.map(member => member.location))];
+  // Get unique departments and locations, filtering out empty/null/undefined values
+  const departments = [...new Set(teamMembers.map(member => member.department).filter(dept => dept && dept.trim() !== ''))];
+  const locations = [...new Set(teamMembers.map(member => member.location).filter(loc => loc && loc.trim() !== ''))];
 
   // Filter team members
   const filteredMembers = teamMembers.filter((member) => {
     // Search query filter
     const searchLower = searchQuery.toLowerCase();
     const matchesSearch = searchQuery === "" || 
-      member.name.toLowerCase().includes(searchLower) ||
-      member.position.toLowerCase().includes(searchLower) ||
-      member.department.toLowerCase().includes(searchLower);
+      member.name?.toLowerCase().includes(searchLower) ||
+      member.position?.toLowerCase().includes(searchLower) ||
+      member.department?.toLowerCase().includes(searchLower);
 
     // Department filter
     const matchesDepartment = !selectedDepartment || member.department === selectedDepartment;
@@ -454,7 +454,7 @@ export default function TeamPage() {
                 <SelectContent>
                   <SelectItem value="all">All departments</SelectItem>
                   {departments.map((dept) => (
-                    <SelectItem key={dept} value={dept}>{dept}</SelectItem>
+                    <SelectItem key={dept} value={dept || 'unknown'}>{dept}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -474,7 +474,7 @@ export default function TeamPage() {
                 <SelectContent>
                   <SelectItem value="all">All locations</SelectItem>
                   {locations.map((loc) => (
-                    <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+                    <SelectItem key={loc} value={loc || 'unknown'}>{loc}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -563,13 +563,13 @@ export default function TeamPage() {
                         setSelectedMember(member);
                         setFormData({
                           name: member.name,
-                          position: member.position,
-                          department: member.department,
-                          location: member.location,
-                          bio: member.bio,
+                          position: member.position || '',
+                          department: member.department || '',
+                          location: member.location || '',
+                          bio: member.bio || '',
                           expertise: member.expertise.join('\n'),
-                          email: member.email,
-                          linkedin: member.linkedin,
+                          email: member.email || '',
+                          linkedin: member.linkedin || '',
                           image: null,
                           serviceIds: member.services?.map(service => service.id) || []
                         });
@@ -668,13 +668,13 @@ export default function TeamPage() {
                           setSelectedMember(member);
                           setFormData({
                             name: member.name,
-                            position: member.position,
-                            department: member.department,
-                            location: member.location,
-                            bio: member.bio,
+                            position: member.position || '',
+                            department: member.department || '',
+                            location: member.location || '',
+                            bio: member.bio || '',
                             expertise: member.expertise.join('\n'),
-                            email: member.email,
-                            linkedin: member.linkedin,
+                            email: member.email || '',
+                            linkedin: member.linkedin || '',
                             image: null,
                             serviceIds: member.services?.map(service => service.id) || []
                           });
