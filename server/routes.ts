@@ -797,10 +797,11 @@ const createOrUpdateAboutContent: AsyncMulterHandler = async (req, res, next) =>
       try {
         features = JSON.parse(body.features);
       } catch (err) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           message: 'Invalid features format'
         });
+        return;
       }
     }
 
@@ -809,10 +810,11 @@ const createOrUpdateAboutContent: AsyncMulterHandler = async (req, res, next) =>
       try {
         coreValues = JSON.parse(body.core_values);
       } catch (err) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           message: 'Invalid core_values format'
         });
+        return;
       }
     }
 
@@ -820,7 +822,7 @@ const createOrUpdateAboutContent: AsyncMulterHandler = async (req, res, next) =>
     const userId = (req as any).user?.id;
 
     // Prepare the content data
-    const contentData = {
+    const contentData: any = {
       title: body.title,
       subtitle: body.subtitle || null,
       description: body.description,
@@ -920,10 +922,11 @@ const createArticle: AsyncMulterHandler = async (req, res, next) => {
 
     // Validate required fields
     if (!parsedBody.title || typeof parsedBody.title !== 'string' || parsedBody.title.trim() === '') {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: "Title is required and must be a valid string"
       });
+      return next();
     }
 
     // Generate slug if not provided
@@ -984,10 +987,11 @@ const updateArticle: AsyncMulterHandler = async (req, res, next) => {
 
     // Validate title
     if (!parsedBody.title || typeof parsedBody.title !== 'string' || parsedBody.title.trim() === '') {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: "Title is required and must be a valid string"
       });
+      return next();
     }
 
     // Handle image upload
@@ -1116,10 +1120,11 @@ const getImpactStat: AsyncHandler = async (req, res, next) => {
     const stat = await storage.getImpactStat(parseInt(id));
 
     if (!stat) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         message: "Impact stat not found"
       });
+      return next();
     }
 
     res.json({
@@ -1171,10 +1176,11 @@ const updateImpactStat: AsyncHandler = async (req, res, next) => {
     const result = await storage.updateImpactStat(parseInt(id), statData);
 
     if (!result) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         message: "Impact stat not found"
       });
+      return next();
     }
 
     res.json({
@@ -1193,10 +1199,11 @@ const deleteImpactStat: AsyncHandler = async (req, res, next) => {
     const result = await storage.deleteImpactStat(parseInt(id));
 
     if (!result) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         message: "Impact stat not found"
       });
+      return next();
     }
 
     res.json({
@@ -1209,35 +1216,36 @@ const deleteImpactStat: AsyncHandler = async (req, res, next) => {
 };
 
 // Footer Content Routes
-const getFooterContent: AsyncHandler = async (req, res, next) => {
+const getFooterContent = asyncHandler(async (req, res, next) => {
   try {
     const footerContent = await storage.getFooterContent();
 
     if (!footerContent) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         message: "Footer content not found"
       });
+      return;
     }
 
-    return res.json({
+    res.json({
       success: true,
       data: footerContent
     });
   } catch (error) {
     console.error("Error fetching footer content:", error);
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: "An error occurred while fetching footer content"
     });
   }
-};
+});
 
 const updateFooterContent: AsyncHandler = async (req, res, next) => {
   try {
     const validatedData = insertFooterContentSchema.parse({
       ...req.body,
-      updated_by: req.user?.id
+      updated_by: (req as any).user?.id
     });
 
     const existingFooter = await storage.getFooterContent();
@@ -1249,24 +1257,27 @@ const updateFooterContent: AsyncHandler = async (req, res, next) => {
       result = await storage.createFooterContent(validatedData);
     }
 
-    return res.json({
+    res.json({
       success: true,
       data: result
     });
+    return next();
   } catch (error) {
     console.error("Error updating footer content:", error);
     if (error instanceof z.ZodError) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: "Invalid data provided",
         errors: error.errors
       });
+      return next();
     }
 
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: "An error occurred while updating footer content"
     });
+    return next();
   }
 };
 
@@ -1293,10 +1304,11 @@ const getLocation: AsyncHandler = async (req, res, next) => {
     const location = await storage.getLocation(parseInt(id));
 
     if (!location) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         message: "Location not found"
       });
+      return next();
     }
 
     res.json({
@@ -1318,10 +1330,11 @@ const createLocation: AsyncMulterHandler = async (req, res, next) => {
 
     // Validate required fields
     if (!city || !country) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: "City and country are required"
       });
+      return next();
     }
 
     const locationData = {
@@ -1355,10 +1368,11 @@ const updateLocation: AsyncMulterHandler = async (req, res, next) => {
 
     // Validate required fields if provided
     if ((city !== undefined && !city) || (country !== undefined && !country)) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: "City and country must not be empty if provided"
       });
+      return next();
     }
 
     const locationData = {
@@ -1372,10 +1386,11 @@ const updateLocation: AsyncMulterHandler = async (req, res, next) => {
     const result = await storage.updateLocation(parseInt(id), locationData);
 
     if (!result) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         message: "Location not found"
       });
+      return next();
     }
 
     res.json({
@@ -1398,10 +1413,11 @@ const deleteLocation: AsyncHandler = async (req, res, next) => {
     const result = await storage.deleteLocation(parseInt(id));
 
     if (!result) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         message: "Location not found"
       });
+      return next();
     }
 
     res.json({
@@ -1453,7 +1469,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await storage.createContactMessage(contactData);
 
       // Format and send email notification
-      const { text, html } = formatContactEmail(contactData);
+      const { text, html } = formatContactEmail({
+        ...contactData,
+        company: contactData.company || undefined
+      });
       const emailSent = await sendEmail({
         to: 'info@pactorg.com',
         subject: `New Contact Form Submission: ${contactData.subject}`,
@@ -1505,10 +1524,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await storage.markContactMessageAsRead(parseInt(id));
 
       if (!result) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Contact message not found"
         });
+        return;
       }
 
       res.json({
@@ -1551,10 +1571,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await storage.updateExpertiseContent(parseInt(id), contentData);
 
       if (!result) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Expertise content not found"
         });
+        return;
       }
 
       res.json({
@@ -1577,10 +1598,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await storage.deleteExpertiseContent(parseInt(id));
 
       if (!result) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Expertise content not found"
         });
+        return;
       }
 
       res.json({
@@ -1682,10 +1704,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const result = await storage.updateServiceContent(parseInt(id), contentData);
       if (!result) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Service content not found"
         });
+        return;
       }
       res.json({
         success: true,
@@ -1707,10 +1730,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await storage.deleteServiceContent(parseInt(id));
 
       if (!result) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Service content not found"
         });
+        return;
       }
 
       res.json({
@@ -1753,10 +1777,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await storage.updateClientContent(parseInt(id), contentData);
 
       if (!result) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Client content not found"
         });
+        return;
       }
 
       res.json({
@@ -1779,10 +1804,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await storage.deleteClientContent(parseInt(id));
 
       if (!result) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Client content not found"
         });
+        return;
       }
 
       res.json({
@@ -1821,10 +1847,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const content = await storage.getProjectContent(parseInt(id));
 
       if (!content) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Project content not found"
         });
+        return;
       }
 
       res.json({
@@ -1926,10 +1953,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await storage.updateProjectContent(parseInt(id), projectData);
 
       if (!result) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Project content not found"
         });
+        return;
       }
 
       res.json({
@@ -1952,10 +1980,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await storage.deleteProjectContent(parseInt(id));
 
       if (!result) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Project content not found"
         });
+        return;
       }
 
       res.json({
@@ -2009,18 +2038,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       if (!article) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Blog article not found"
         });
+        return;
       }
 
       // For public routes, ensure only published articles are accessible
       if (article.status !== "published") {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Blog article not found"
         });
+        return;
       }
 
       res.json({
@@ -2061,10 +2092,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const article = await storage.getBlogArticle(parseInt(id));
 
       if (!article) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Blog article not found"
         });
+        return;
       }
 
       res.json({
@@ -2088,10 +2120,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Check if req.body.data exists and is a string
       if (!req.body.data || typeof req.body.data !== 'string') {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           message: "Missing or invalid 'data' field in request body"
         });
+        return;
       }
 
       let parsedData;
@@ -2100,10 +2133,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.log("POST /api/admin/blog/articles - Parsed data:", parsedData);
       } catch (error) {
         console.error("Error parsing req.body.data:", error);
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           message: "Invalid JSON in 'data' field"
         });
+        return;
       }
 
       const {
@@ -2115,10 +2149,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Validate title is a valid string
       if (!title || typeof title !== 'string' || title.trim() === '') {
         console.log("POST /api/admin/blog/articles - Title validation failed:", { title, type: typeof title });
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           message: "Title is required and must be a valid string"
         });
+        return;
       }
 
       let image = parsedData.image;
@@ -2197,10 +2232,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if article exists
       const existingArticle = await storage.getBlogArticle(parseInt(id));
       if (!existingArticle) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Blog article not found"
         });
+        return;
       }
 
       console.log("PATCH /api/admin/blog/articles/:id - Request body:", req.body);
@@ -2214,10 +2250,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.log("PATCH /api/admin/blog/articles/:id - Parsed data:", parsedData);
         } catch (error) {
           console.error("Error parsing req.body.data:", error);
-          return res.status(400).json({
+          res.status(400).json({
             success: false,
             message: "Invalid JSON in 'data' field"
           });
+          return;
         }
       } else {
         // Legacy handling for direct body fields
@@ -2240,10 +2277,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let slug = existingArticle.slug;
       if (title && title !== existingArticle.title) {
         if (typeof title !== 'string' || title.trim() === '') {
-          return res.status(400).json({
+          res.status(400).json({
             success: false,
             message: "Title must be a valid string"
           });
+          return;
         }
 
         try {
@@ -2317,10 +2355,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await storage.deleteBlogArticle(parseInt(id));
 
       if (!result) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "Blog article not found"
         });
+        return;
       }
 
       res.json({
@@ -2458,15 +2497,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/login", async (req: Request, res: Response) => {
     const { username, password } = req.body;
     if (!username || !password) {
-      return res.status(400).json({ success: false, message: "Username and password required" });
+      res.status(400).json({ success: false, message: "Username and password required" });
+      return;
     }
     const user = await storage.getUserByUsername(username);
     if (!user) {
-      return res.status(401).json({ success: false, message: "Invalid credentials" });
+      res.status(401).json({ success: false, message: "Invalid credentials" });
+      return;
     }
     const valid = await compare(password, user.password);
     if (!valid) {
-      return res.status(401).json({ success: false, message: "Invalid credentials" });
+      res.status(401).json({ success: false, message: "Invalid credentials" });
+      return;
     }
     const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, JWT_SECRET, { expiresIn: "2h" });
     res.json({ success: true, token, user: { id: user.id, username: user.username, role: user.role } });
@@ -2476,11 +2518,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/register", async (req: Request, res: Response) => {
     const { username, password, role } = req.body;
     if (!username || !password || !role) {
-      return res.status(400).json({ success: false, message: "Username, password, and role are required" });
+      res.status(400).json({ success: false, message: "Username, password, and role are required" });
+      return;
     }
     const existing = await storage.getUserByUsername(username);
     if (existing) {
-      return res.status(409).json({ success: false, message: "Username already exists" });
+      res.status(409).json({ success: false, message: "Username already exists" });
+      return;
     }
     try {
       const user = await storage.createUser({ username, password, role });

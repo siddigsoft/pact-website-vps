@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Edit2, Trash2, Building, FileText, Search } from 'lucide-react';
-import { ClientContent } from '../../../shared/schema';
+import { ClientContent } from '../../../../shared/schema';
 
 // UI Components
 import {
@@ -362,7 +362,7 @@ export default function ClientsPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {selectedClient ? 'Edit Client' : 'Add New Client'}

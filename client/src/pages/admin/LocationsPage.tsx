@@ -246,7 +246,7 @@ export default function LocationsPage() {
       </Card>
       
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{selectedLocation ? 'Edit Location' : 'Add Location'}</DialogTitle>
             <DialogDescription>

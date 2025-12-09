@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { projectsApi } from '@/api/projects';
-import type { ProjectContent } from '@shared/schema';
+import type { ProjectContent, ProjectStatus } from '@shared/schema';
 // Remove the import from local file
 // import { services } from '@/data/services';
 
@@ -27,11 +27,13 @@ export interface Project {
   title: string;
   description: string;
   organization: string;
-  category: string;
+  category: string | null;
   bg_image: string | null;
   icon: string | null;
   duration: string | null;
   location: string | null;
+  image: string | null;
+  status: ProjectStatus | null;
   services: string[] | null;
   order_index: number | null;
   updated_at: Date;
@@ -49,82 +51,72 @@ export const placeholderImages = [
 // Default projects data
 const initialProjects: Project[] = [
   {
-    id: "1",
-    slug: "technical-support-greater-darfur-microfinance-apex",
+    id: 1,
     title: "Technical Support to the Greater Darfur Microfinance Apex",
     description: "Support in implementing business plan for microfinance development in Darfur, creating income-generation opportunities for conflict-affected populations.",
-    client: "United Nations Development Programme (UNDP)",
+    organization: "United Nations Development Programme (UNDP)",
+    category: "Microfinance",
+    bg_image: null,
+    icon: null,
     duration: "September 2018 – December 2020",
     location: "Five Darfur States and Khartoum",
-    country: "Sudan",
-    services: [], // Will be populated when services are loaded
-    projectDescription: "Following the December 2017 establishment of the Microfinance Apex in Darfur (Darfur Elkubra Microfinance Development Company, DEMDC), the UNDP commissioned a microfinance project in September 2018 involving the automation of the Apex's operations as well as the provision of support to the institution in implementing its business plan. The overall purpose of the project was to create and enhance the microfinance system in Darfur to create income-generation opportunities for poor conflict-affected population in Darfur including women, especially widows and de facto Female/headed households and small producers through access to financing as well as training and skills enhancement. In this project, PACT was contracted to provide consultancy services.\n\nThe overarching objective of the assignment/ project was to provide technical support and guidance for the implementation of Darfur Apex business plan including, deployment of technological solutions for microfinance with mobile applications, as well as provision of tailored mentoring services to the newly established Greater Darfur Microfinance Co. (GDMC) and the state-owned Microfinance Institutions (MFI).",
-    servicesDescription: [
-      "Technical Assistance to the Darfur Elkubra Microfinance Development Company (Darfur MF Apex) in Business Plan Development & Implementation involving the following:",
-      "Assessment of the impact of adopted policies on the efficiency and effectiveness of the service providers",
-      "Assisting in the correct setup of Apex structure and operations",
-      "Providing Capacity Building for DEMDC Staff & Microfinance Partners",
-      "Assisting the Apex in creating an enabling environment for microfinance in Darfur targeting vulnerable populations, including women",
-      "Technical Assistance in the Development of Network of Agents",
-      "Assisting in Fund-Raising for the Apex",
-      "Acquisition & Implementation of Core Microfinance System with Mobile Commerce Channels",
-      "Provision of Tailored Mentoring Services to Darfur Microfinance Apex and Partner Micro-financing institutions (MFIs)"
-    ],
-    image: placeholderImages[0]
+    image: placeholderImages[0],
+    status: "completed",
+    services: [],
+    order_index: 1,
+    updated_at: new Date(),
+    updated_by: null
   },
   {
-    id: "2",
-    slug: "peaceful-environment-livelihoods-south-kordofan",
+    id: 2,
     title: "Attractive, Peaceful and Conducive Environment for Livelihoods",
     description: "Project designed to address irregular migration by creating sustainable livelihoods for farmers, pastoralists, IDPs and refugees.",
-    client: "South Kordofan State",
+    organization: "South Kordofan State",
+    category: "Livelihoods",
+    bg_image: null,
+    icon: null,
     duration: "July – August 2016",
     location: "South Kordofan State",
-    country: "Sudan",
-    services: [], // Will be populated when services are loaded
-    projectDescription: "The project was designed and implemented in the backdrop of the unprecedented influx of refugees and migrants from Africa and the Middle East to the EU, with hundreds of thousands arriving on Europe's shores, risking their lives to escape from violent conflict, Persecution and poverty in search of a better future. There are several concerns that led Europe to try to find ways and means to address the issue of irregular migration.",
-    servicesDescription: [
-      "PACT conducted field surveys in the targeted areas and gathered relevant information",
-      "Consulted with local communities to identify their requirements and preferences",
-      "The collected data were analyzed, and strategies were formulated, through which specific projects were recommended and feasibility studies were prepared"
-    ],
-    image: placeholderImages[1]
+    image: placeholderImages[1],
+    status: "completed",
+    services: [],
+    order_index: 2,
+    updated_at: new Date(),
+    updated_by: null
   },
   {
-    id: "3",
-    slug: "value-chain-analysis-sme-finance-training",
+    id: 3,
     title: "Value Chain Analysis & SME Finance Training",
     description: "Training program for bankers and MFI executives on value chain analysis and SME finance best practices.",
-    client: "Sudan Microfinance Development Company (SMDC)",
+    organization: "Sudan Microfinance Development Company (SMDC)",
+    category: "Training",
+    bg_image: null,
+    icon: null,
     duration: "31 March – 5 April 2014",
     location: "Debra Zeit",
-    country: "Ethiopia",
-    services: [], // Will be populated when services are loaded
-    projectDescription: "The project's objective was to train bankers, MFIs executives, and organizations to select and analyze products' value chain and to design and implement integrated projects covering the product development from pre-production to delivery in its customized form to the end-user. Also, the training covered international best practices on pre-qualifying potential SME borrowers, financial and non-financial analysis of the borrower's business plan and analyzing financial provider's risks.",
-    servicesDescription: [
-      "Developed a tailored 6-day training curriculum",
-      "Delivered training sessions in Debra Zeit, Ethiopia",
-      "Supported trainees in identifying future capacity-building needs"
-    ],
-    image: placeholderImages[2]
+    image: placeholderImages[2],
+    status: "completed",
+    services: [],
+    order_index: 3,
+    updated_at: new Date(),
+    updated_by: null
   },
   {
-    id: "4",
-    slug: "youth-women-training-peacebuilding",
+    id: 4,
     title: "Youth and Women Training of Trainers",
     description: "Training program on Peace Building, FoRB, Human Rights, Advocacy, and Gender Mainstreaming.",
-    client: "The Fellowship of Christian Councils and Churches in the Great Lakes and Horn of Africa (FECCLAHA)",
+    organization: "The Fellowship of Christian Councils and Churches in the Great Lakes and Horn of Africa (FECCLAHA)",
+    category: "Training",
+    bg_image: null,
+    icon: null,
     duration: "November – December 2020",
     location: "Khartoum",
-    country: "Sudan",
-    services: [], // Will be populated when services are loaded
-    projectDescription: "Provision of professional services for Training on Peace Building, FoRB, Human Rights, Advocacy, Gender Mainstreaming, Human Rights. PACT provided Youth and Women Training of Trainers on Peace Building, FoRB, Human Rights, Advocacy, Gender Mainstreaming, Human Right. PACT also provided facilitation services for Intra-Faith Dialogue, Advocacy Training and Entrepreneurship Workshops for selected youth from across Sudan.",
-    servicesDescription: [
-      "Provided Youth and Women Training of Trainers on Peace Building, FoRB, Human Rights, Advocacy, Gender Mainstreaming, Human Rights",
-      "Facilitated Intra-Faith Dialogue sessions",
-      "Conducted Advocacy Training and Entrepreneurship Workshops for selected youth from across Sudan"
-    ],
-    image: placeholderImages[3]
+    image: placeholderImages[3],
+    status: "completed",
+    services: [],
+    order_index: 4,
+    updated_at: new Date(),
+    updated_by: null
   }
 ];
 
@@ -173,7 +165,12 @@ export const ProjectsProvider: React.FC<{ children: ReactNode }> = ({ children }
       try {
       setLoading(true);
       const data = await projectsApi.getAllProjects();
-      setProjects(data);
+      // Map API response to include services property
+      const mappedData = data.map(project => ({
+        ...project,
+        services: [] // Initialize with empty array, will be populated if needed
+      }));
+      setProjects(mappedData);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch projects'));

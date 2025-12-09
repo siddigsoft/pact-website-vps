@@ -105,10 +105,10 @@ interface Project {
   duration: string | null;
   location: string | null;
   image: string | null;
-  status: ProjectStatus;
-  services: number[];
-  order_index: number;
-  updated_at: string;
+  status: ProjectStatus | null;
+  services: string[] | null;
+  order_index: number | null;
+  updated_at: Date;
   updated_by: number | null;
 }
 
@@ -141,7 +141,7 @@ export default function ProjectsPage() {
   // Get unique categories from projects
   const categories = useMemo(() => {
     const uniqueCategories = new Set(projects.map(p => p.category).filter(Boolean));
-    return Array.from(uniqueCategories);
+    return Array.from(uniqueCategories) as string[];
   }, [projects]);
 
   // Filter projects
@@ -163,7 +163,7 @@ export default function ProjectsPage() {
       // Service filter
       const matchesService = !selectedService || 
         (project.services && availableServices
-          .filter(s => project.services.includes(s.id))
+          .filter(s => project.services!.includes(s.id.toString()))
           .some(s => s.title === selectedService));
 
       return matchesSearch && matchesStatus && matchesCategory && matchesService;
@@ -318,7 +318,7 @@ export default function ProjectsPage() {
       icon: project.icon,
       duration: project.duration,
       location: project.location,
-      services: project.services,
+      services: project.services ? project.services.map(s => parseInt(s)) : [],
       order_index: project.order_index || 0,
       status: project.status,
       image: project.image
@@ -427,7 +427,7 @@ export default function ProjectsPage() {
             Object.entries(project).forEach(([key, value]) => {
               if (key === 'services' && Array.isArray(value)) {
                 formData.append(key, JSON.stringify(value));
-              } else if (value !== null) {
+              } else if (value !== null && value !== undefined) {
                 formData.append(key, value.toString());
               }
             });
@@ -804,7 +804,8 @@ export default function ProjectsPage() {
                     <PaginationItem>
                       <PaginationPrevious 
                         onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
+                        aria-disabled={currentPage === 1}
+                        className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
                       />
                     </PaginationItem>
                     
@@ -826,7 +827,8 @@ export default function ProjectsPage() {
                     <PaginationItem>
                       <PaginationNext 
                         onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
+                        aria-disabled={currentPage === totalPages}
+                        className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
                       />
                     </PaginationItem>
                   </PaginationContent>
@@ -872,7 +874,7 @@ export default function ProjectsPage() {
               form.reset();
         }
             }}>
-        <DialogContent className="sm:max-w-3xl">
+        <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
             <DialogTitle>{isCreating ? 'Create New Project' : 'Edit Project'}</DialogTitle>
             <DialogDescription>
@@ -881,7 +883,7 @@ export default function ProjectsPage() {
                 : 'Make changes to the selected project'}
             </DialogDescription>
             </DialogHeader>
-          <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto">
+          <div className="grid gap-4 py-4">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
@@ -1185,7 +1187,7 @@ export default function ProjectsPage() {
                       <span className="text-sm font-medium">Services: </span>
                       <div className="flex flex-wrap gap-2 mt-1">
                         {currentProject.services.map((serviceId) => {
-                          const service = availableServices.find(s => s.id === serviceId);
+                          const service = availableServices.find(s => s.id === parseInt(serviceId));
                           return service ? (
                             <Badge key={serviceId} variant="outline">{service.title}</Badge>
                           ) : null;

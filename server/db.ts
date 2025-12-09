@@ -8,9 +8,9 @@ config();
 // Optimized connection pool for Neon Database
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  max: 20, // Maximum number of clients in the pool
+  max: 10, // Reduced from 20 to prevent connection exhaustion
   idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-  connectionTimeoutMillis: 10000, // Return an error after 10 seconds if connection cannot be established
+  connectionTimeoutMillis: 20000, // Increased timeout for Neon connections
   ssl: process.env.DATABASE_URL?.includes('neon.tech') ? { rejectUnauthorized: false } : undefined,
 });
 

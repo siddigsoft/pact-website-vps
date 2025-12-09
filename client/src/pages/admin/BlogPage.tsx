@@ -95,7 +95,17 @@ interface Project {
   id: number;
   title: string;
   description: string;
-  client: string;
+  organization: string;
+  category: string | null;
+  bg_image: string | null;
+  icon: string | null;
+  duration: string | null;
+  location: string | null;
+  image: string | null;
+  status: string | null;
+  order_index: number | null;
+  updated_at: Date;
+  updated_by: number | null;
 }
 
 interface ApiResponse<T> {
@@ -164,7 +174,10 @@ export default function BlogPage() {
   // Get articles from API or use empty array if not loaded
   const articles: BlogArticle[] = articlesData?.data?.map(article => ({
     ...article,
-    status: article.status as 'published' | 'draft'
+    status: article.status as 'published' | 'draft',
+    created_at: typeof article.created_at === 'string' ? article.created_at : article.created_at.toISOString(),
+    updated_at: typeof article.updated_at === 'string' ? article.updated_at : article.updated_at.toISOString(),
+    published_at: article.published_at ? (typeof article.published_at === 'string' ? article.published_at : article.published_at.toISOString()) : null
   })) || [];
   
   // Fetch services
@@ -191,7 +204,7 @@ export default function BlogPage() {
   });
   
   // Get projects from API or use empty array
-  const projects: Project[] = projectsResponse?.data || [];
+  const projects: Project[] = projectsResponse || [];
   
   // Fetch article services when editing
   const { data: articleServicesData } = useQuery({
@@ -277,7 +290,7 @@ export default function BlogPage() {
         setIsCreating(false);
         resetForm();
       } else {
-        throw new Error(data.message || "Failed to save team member");
+        throw new Error("Failed to create article");
       }
     },
     onError: (error) => {
@@ -818,7 +831,7 @@ export default function BlogPage() {
           resetForm();
         }
       }}>
-        <DialogContent className="sm:max-w-3xl">
+        <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{isCreating ? 'Create New Article' : 'Edit Article'}</DialogTitle>
             <DialogDescription>
@@ -827,7 +840,7 @@ export default function BlogPage() {
                 : 'Make changes to the selected blog article'}
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto">
+          <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="title">Title*</Label>
               <Input 

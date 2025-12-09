@@ -742,7 +742,7 @@ export class DatabaseStorage implements IStorage {
   async createAboutContent(content: InsertAboutContent): Promise<AboutContent> {
     const [newContent] = await db
       .insert(aboutContent)
-      .values(content)
+      .values(content as any)
       .returning();
     return newContent;
   }
@@ -753,7 +753,7 @@ export class DatabaseStorage implements IStorage {
       .set({
         ...content,
         updated_at: new Date()
-      })
+      } as any)
       .where(eq(aboutContent.id, id))
       .returning();
     return updatedContent;
@@ -785,7 +785,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteImpactStat(id: number): Promise<boolean> {
     const result = await db.delete(impactStats).where(eq(impactStats.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   // Footer Content methods
@@ -797,7 +797,7 @@ export class DatabaseStorage implements IStorage {
   async createFooterContent(content: InsertFooterContent): Promise<FooterContent> {
     const [result] = await db
       .insert(footerContent)
-      .values(content)
+      .values(content as any)
       .returning();
     return result;
   }
@@ -809,7 +809,7 @@ export class DatabaseStorage implements IStorage {
         .set({
           ...content,
           updated_at: new Date(),
-        })
+        } as any)
         .where(eq(footerContent.id, id))
         .returning();
       return result;

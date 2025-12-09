@@ -78,7 +78,7 @@ export const projectContent = pgTable("project_content", {
   duration: text("duration"),
   location: text("location"),
   image: text("image"),
-  status: text("status", { enum: Object.values(ProjectStatus) }).default(ProjectStatus.COMPLETED),
+  status: text("status", { enum: ["draft", "in_progress", "completed", "archived"] }).default(ProjectStatus.COMPLETED),
   order_index: integer("order_index").default(0),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
   updated_by: integer("updated_by").references(() => users.id),
@@ -441,6 +441,9 @@ export const impactStats = pgTable("impact_stats", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
   updated_by: integer("updated_by").references(() => users.id),
 });
+
+export type InsertImpactStat = typeof impactStats.$inferInsert;
+export type ImpactStat = typeof impactStats.$inferSelect;
 
 export type InsertProjectService = z.infer<typeof insertProjectServiceSchema>;
 export type ProjectService = typeof projectServices.$inferSelect;
