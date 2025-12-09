@@ -1,0 +1,117 @@
+1. Landing Page (Home)
+Hero Section:
+"Empowering Transformation Through Smart Solutions"
+[Button: “Discover Our Services”]
+
+Intro:
+At PACT Consultancy, we partner with organizations to design strategies, build capabilities, and deliver sustainable change. Our tailored approach drives growth, resilience, and impact in an ever-evolving world.
+
+Quick Highlights:
+
+15+ years of consulting excellence
+
+Multisector expertise: Finance, Governance, Health, and beyond
+
+Global and regional partnerships
+
+[Button: “Learn More About Us”]
+
+2. Services Page
+Title: "Our Services"
+Intro:
+From organizational assessments to digital transformation, PACT delivers customized consulting services that unlock potential and drive performance.
+
+Services Highlights (as cards):
+
+Organizational Assessments: Deep insights to sharpen strategies and operations.
+
+Digital Transformation & Fintech: Driving innovation through cutting-edge technology solutions.
+
+Governance & Leadership Development: Building institutions that lead with impact.
+
+Peace-building Initiatives: Facilitating dialogue, stability, and social cohesion.
+
+Capacity Building Programs: Tailored training for sustainable change.
+
+3. Expertise Page
+Title: "Our Expertise Across Sectors"
+Intro:
+PACT’s diverse expertise bridges sectors and industries, empowering organizations to meet their biggest challenges with confidence.
+
+Sectors Grid:
+
+Finance and Fintech
+
+Health and Social Development
+
+Governance and Democracy
+
+Peace-building and Conflict Resolution
+
+Private Sector Development
+
+Education and Youth Empowerment
+
+[Button: “Explore Our Projects”]
+
+4. Clients Page (Business Associates)
+Title: "Our Partners and Clients"
+Intro:
+We are proud to collaborate with visionary organizations committed to making a difference. Our network spans local, regional, and international partners.
+
+Sections:
+
+Client Logos Carousel
+
+Featured Success Stories: (e.g., “Supporting Youth Economic Empowerment in East Africa”)
+
+Testimonial Snippets:
+"PACT brings fresh thinking and reliable execution — they are our trusted partner for transformational programs." — [Client Name]
+
+5. News and Events Page
+Title: "Latest News & Events"
+Intro:
+Stay updated on our projects, events, and industry insights.
+
+Layout:
+
+Cards with Featured Image, Title, Short Description, and Date
+
+Filters (Upcoming Events | News | Reports)
+
+Sample Posts:
+
+"PACT hosts regional fintech innovation forum"
+
+"Celebrating a decade of impact in peace-building"
+
+"Upcoming workshop: Building Digital Resilience in SMEs"
+
+6. Contact Page
+Title: "Get in Touch"
+Intro:
+Ready to collaborate? Reach out to start a conversation with our team.
+
+Contact Form Fields:
+
+Name
+
+Organization
+
+Email
+
+Message
+
+[Submit Button]
+
+Additional Info:
+
+Office Address
+
+Phone Number
+
+Email Address
+
+LinkedIn, Twitter, Facebook icons
+
+Embedded Google Map showing office location

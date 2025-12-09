@@ -1,0 +1,5 @@
+ALTER TABLE locations
+DROP COLUMN name,
+DROP COLUMN email,
+DROP COLUMN phone,
+DROP COLUMN website; 

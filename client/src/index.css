@@ -1,0 +1,222 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* PACT Consultancy colors */
+  --primary: #1A3A5F; /* Navy blue for PACT */
+  --primary-hover: #142E4C;
+  --accent: #E96D1F; /* Orange accent */
+  --accent-hover: #D35E16;
+  --dark: #1A3A5F;
+  --secondary: #455A64;
+  --light: #F5F9FC;
+  --white: #FFFFFF;
+  --danger: #D32F2F;
+  --gray-100: #F9FAFB;
+  --gray-200: #EDF1F5;
+  --gray-300: #E2E8F0;
+  --gray-400: #CBD5E1;
+  --gray-500: #94A3B8;
+  
+  /* System variables */
+  --background: 0 0% 100%;
+  --foreground: 20 14.3% 4.1%;
+  --muted: 210 20% 98%;
+  --muted-foreground: 215 16% 47%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 14.3% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14.3% 4.1%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --primary-hsl: 210 55% 24%;
+  --primary-foreground: 210 40% 98%;
+  --secondary-hsl: 200 18% 33%;
+  --secondary-foreground: 24 9.8% 10%;
+  --accent-hsl: 22 80% 52%;
+  --accent-foreground: 355.7 100% 97.3%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 20 14.3% 4.1%;
+  --radius: 0.25rem;
+}
+
+.dark {
+  --background: 215 28% 17%;
+  --foreground: 210 40% 98%;
+  --muted: 215 27% 25%;
+  --muted-foreground: 217 33% 80%;
+  --popover: 215 28% 17%;
+  --popover-foreground: 210 40% 98%;
+  --card: 215 28% 17%;
+  --card-foreground: 210 40% 98%;
+  --border: 215 27% 25%;
+  --input: 215 27% 25%;
+  --primary-hsl: 210 55% 24%;
+  --primary-foreground: 210 40% 98%;
+  --secondary-hsl: 215 27% 25%;
+  --secondary-foreground: 210 40% 98%;
+  --accent-hsl: 22 80% 52%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 215 27% 70%;
+  --radius: 0.25rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-light text-dark;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medium;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+}
+
+@layer components {
+  /* Navigation styles with underline effect */
+  .nav-link {
+    @apply relative;
+  }
+  
+  .nav-link:after {
+    content: '';
+    @apply absolute bottom-[-2px] left-0 w-0 h-[2px] bg-accent transition-all duration-300;
+  }
+  
+  .nav-link:hover:after {
+    @apply w-full;
+  }
+  
+  /* Button styles */
+  .btn {
+    @apply inline-flex items-center justify-center px-5 py-2.5 rounded transition-all font-medium;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary-hover;
+  }
+  
+  .btn-accent {
+    @apply bg-accent text-white hover:bg-accent-hover;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-white;
+  }
+
+  .btn-outline-white {
+    @apply border-2 border-white text-white hover:bg-white/20;
+  }
+  
+  .btn-arrow {
+    @apply group-hover:translate-x-1 transition-transform duration-300;
+  }
+  
+  /* Card styles */
+  .card {
+    @apply bg-white rounded-md shadow-sm overflow-hidden transition-shadow duration-300 hover:shadow-md;
+  }
+  
+  /* Background patterns */
+  .bg-pattern-dots {
+    background-image: radial-gradient(var(--gray-300) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .section-divider {
+    @apply h-1 w-20 bg-accent my-4;
+  }
+  
+  /* Embla Carousel Styles */
+  .embla {
+    @apply overflow-hidden relative;
+  }
+  
+  .embla__container {
+    @apply flex;
+  }
+  
+  .embla__slide {
+    @apply min-w-full relative;
+  }
+  
+  /* Active slide indicator */
+  .embla__dot {
+    @apply w-10 h-1 rounded-none bg-white/30 transition-all;
+  }
+  
+  .embla__dot--selected {
+    @apply bg-accent w-16;
+  }
+
+  /* Animation utilities */
+  .animate-fade-up {
+    animation: fadeUp 0.6s ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Services and expertise cards */
+  .service-card {
+    @apply bg-white rounded-md shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:translate-y-[-5px];
+  }
+
+  .expertise-card {
+    @apply bg-white rounded-md shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md border-b-4 border-transparent hover:border-accent;
+  }
+
+  /* Statistics counter */
+  .counter-item {
+    @apply flex flex-col items-center text-center p-6;
+  }
+
+  .counter-value {
+    @apply text-4xl md:text-5xl font-bold text-primary mb-2;
+  }
+
+  .counter-label {
+    @apply text-sm text-secondary uppercase tracking-wider;
+  }
+}
+
