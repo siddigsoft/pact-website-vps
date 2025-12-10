@@ -12,9 +12,9 @@ This is a clone of the production VPS running at http://138.68.104.122:5000/admi
 
 ### Option 1: Run with Docker Compose (Recommended)
 
-1. **Copy the environment file:**
+1. **Copy the environment file (uses hosted Neon DB):**
    ```bash
-   cp .env.local .env
+   cp env.example .env
    ```
 
 2. **Start the application with Docker:**
@@ -25,28 +25,13 @@ This is a clone of the production VPS running at http://138.68.104.122:5000/admi
    The application will be available at:
    - Frontend: http://localhost:5000
    - Admin Panel: http://localhost:5000/admin
-   - Database: localhost:5432
+   - Database: Hosted Neon via `DATABASE_URL`
 
 ### Option 2: Run Locally (Without Docker)
 
-1. **Start PostgreSQL database:**
+1. **Copy the environment file (uses hosted Neon DB):**
    ```bash
-   # Option A: Using Docker for just the database
-   docker run -d \
-     --name pact-postgres \
-     -e POSTGRES_USER=postgres \
-     -e POSTGRES_PASSWORD=postgres \
-     -e POSTGRES_DB=pactconsultancy \
-     -p 5432:5432 \
-     postgres:15-alpine
-
-   # Option B: Use a locally installed PostgreSQL
-   # Make sure PostgreSQL is running and create a database named 'pactconsultancy'
-   ```
-
-2. **Copy the environment file:**
-   ```bash
-   cp .env.local .env
+   cp env.example .env
    ```
 
 3. **Install dependencies:**
@@ -144,7 +129,7 @@ Based on the VPS configuration, you can access the admin panel at:
 
 ## Environment Variables
 
-Key environment variables (see `.env.local`):
+Key environment variables (see `env.example`):
 
 - `NODE_ENV` - Environment (development/production)
 - `PORT` - Server port (default: 5000)
@@ -185,6 +170,6 @@ rsync -avz -e ssh root@138.68.104.122:/root/pact/uploads/ ./uploads/
 ## Notes
 
 - The `.env` file from VPS contains production credentials
-- `.env.local` is configured for local development
+- `env.example` is configured for local development against the hosted database
 - Never commit `.env` files to version control
 - The VPS uses Docker Compose in production mode

@@ -59,7 +59,7 @@
   • package.json .............. Project dependencies
   • docker-compose.yml ........ Docker configuration
   • .env ...................... Environment variables (local)
-  • .env.local ................ Environment template
+  • env.example ............... Environment template (hosted DB)
   • pact_postgres-data.tar.bz2  Database backup (6.5 MB)
 
 

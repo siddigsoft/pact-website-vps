@@ -8,8 +8,8 @@ echo ""
 
 # Check if .env exists
 if [ ! -f .env ]; then
-    echo "✓ Creating .env file from .env.local..."
-    cp .env.local .env
+    echo "✓ Creating .env file from env.example..."
+    cp env.example .env
 else
     echo "✓ .env file already exists"
 fi

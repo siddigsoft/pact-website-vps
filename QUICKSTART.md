@@ -23,7 +23,7 @@
 ```
 
 This will:
-- Create your `.env` file
+- Create your `.env` file (pointing to the hosted database)
 - Install dependencies
 - Start the application in Docker
 - Set up the database
@@ -40,7 +40,7 @@ Use your VPS admin credentials to log in.
 
 ### Step 1: Copy environment file
 ```bash
-cp .env.local .env
+cp env.example .env
 ```
 
 ### Step 2: Install dependencies
@@ -166,7 +166,7 @@ pact-local/
 ├── uploads/             # Uploaded files
 ├── docker-compose.yml   # Docker configuration
 ├── .env                 # Local environment variables
-├── .env.local           # Template for local dev
+├── env.example          # Template for local dev (hosted DB)
 └── LOCAL_SETUP.md       # Detailed documentation
 ```
 

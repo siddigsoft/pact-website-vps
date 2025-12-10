@@ -9,13 +9,16 @@ import { config } from 'dotenv';
 // Load environment variables from .env file
 config();
 
-// Create a database connection specifically for this migration script
-const connectionString = process.env.DATABASE_URL
-    ? process.env.DATABASE_URL.replace('@postgres:', '@localhost:')
-    : 'postgres://postgres:postgres@localhost:5432/pactconsultancy';
+if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL is required to run the projects import script');
+}
+
+// Use the provided database URL directly (supports hosted Neon)
+const connectionString = process.env.DATABASE_URL;
 
 const pool = new Pool({
-    connectionString
+    connectionString,
+    ssl: connectionString.includes('neon.tech') ? { rejectUnauthorized: false } : undefined,
 });
 
 const db = drizzle(pool, { schema });
@@ -351,7 +354,7 @@ async function importProjects() {
             await pool.query('SELECT NOW()');
             console.log('Database connection successful');
         } catch (err) {
-            console.error('Failed to connect to database. Make sure your database is running and accessible at localhost:5432');
+            console.error('Failed to connect to database. Ensure DATABASE_URL is correct and reachable.');
             throw err;
         }
 

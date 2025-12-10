@@ -36,7 +36,7 @@ The source code from your VPS has been successfully cloned to your local machine
 
 ### ✅ Configuration
 - Docker configuration (docker-compose.yml, Dockerfile)
-- Environment templates (.env.local, .env.example)
+- Environment template (env.example)
 - Package dependencies (package.json, package-lock.json)
 
 ### ✅ Documentation
@@ -60,7 +60,7 @@ cd "/Users/sgeorge/Desktop/PACT CONSULTANCY/Pact website lovable/Pact website vp
 ### STEP 3: Access Application
 - **Frontend:** http://localhost:5000
 - **Admin Panel:** http://localhost:5000/admin
-- **Database:** localhost:5432
+- **Database:** Hosted Neon (see `DATABASE_URL`)
 
 ---
 
@@ -168,14 +168,30 @@ rsync -avz -e ssh root@138.68.104.122:/root/pact/uploads/ ./uploads/
 ```bash
 NODE_ENV=development
 PORT=5000
-DATABASE_URL=postgres://postgres:postgres@localhost:5432/pactconsultancy
+DATABASE_URL=postgresql://neondb_owner:npg_aTqvez1r0bkA@ep-holy-sea-ahwpuzyd-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+SESSION_SECRET=your-secure-random-session-secret-here
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+SMTP_FROM=info@pactorg.com
+PRODUCTION_URL=https://your-vercel-app.vercel.app
+VITE_API_URL=http://localhost:5000
 ```
 
 ### Production (VPS .env)
 ```bash
 NODE_ENV=production
 PORT=5000
-DATABASE_URL=postgres://postgres:Cm91UnyGIa2V8H19@postgres:5432/pactconsultancy
+DATABASE_URL=postgresql://neondb_owner:npg_aTqvez1r0bkA@ep-holy-sea-ahwpuzyd-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+SESSION_SECRET=your-secure-random-session-secret-here
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+SMTP_FROM=info@pactorg.com
+PRODUCTION_URL=https://your-vercel-app.vercel.app
+VITE_API_URL=http://localhost:5000
 ```
 
 ---
