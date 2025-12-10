@@ -85,7 +85,31 @@ jobs:
             mkdir -p "$APP_DIR"
             cd "$APP_DIR"
 
+            # Stop existing containers if they exist
+            echo "Stopping existing containers..."
+            docker compose -f "$COMPOSE_FILE" down || true
+
+            # Check for and stop any service using port 80
+            echo "Checking for services using port 80..."
+            if lsof -ti:80 > /dev/null 2>&1; then
+              echo "Port 80 is in use, attempting to free it..."
+              # Try to stop nginx if running as a service
+              systemctl stop nginx 2>/dev/null || true
+              # Try to stop apache if running
+              systemctl stop apache2 2>/dev/null || true
+              # Kill any process using port 80 (be careful with this)
+              fuser -k 80/tcp 2>/dev/null || true
+            fi
+
+            # Check for and stop any Docker containers using port 80
+            CONTAINER_USING_80=$(docker ps --format "{{.ID}}\t{{.Ports}}" | grep ":80->" | awk '{print $1}' | head -1)
+            if [ ! -z "$CONTAINER_USING_80" ]; then
+              echo "Stopping Docker container using port 80: $CONTAINER_USING_80"
+              docker stop "$CONTAINER_USING_80" || true
+            fi
+
             # Build and restart
+            echo "Building and starting containers..."
             docker compose -f "$COMPOSE_FILE" pull || true
             docker compose -f "$COMPOSE_FILE" build --pull
             docker compose -f "$COMPOSE_FILE" up -d --remove-orphans
@@ -93,4 +117,6 @@ jobs:
             # Light cleanup to help with disk space
             docker image prune -f
             docker volume prune -f
+
+            echo "Deployment completed successfully!"
 
