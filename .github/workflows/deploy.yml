@@ -1,0 +1,58 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Sync repo to the VPS (keeps server copy up to date, removes deleted files)
+      - name: Sync files to VPS
+        uses: easingthemes/ssh-deploy@v5.1.0
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER: ${{ secrets.SSH_USER }}
+          REMOTE_PORT: ${{ secrets.SSH_PORT || '22' }}
+          SOURCE: "./"
+          TARGET: ${{ secrets.REMOTE_PATH || '/opt/pact-website' }}
+          ARGS: "-avz --delete --exclude='.git' --exclude='node_modules' --exclude='.env'"
+
+      # Build + restart services on the VPS
+      - name: Deploy via Docker Compose
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || '22' }}
+          script: |
+            set -euo pipefail
+
+            APP_DIR="${APP_DIR:-${{ secrets.REMOTE_PATH || '/opt/pact-website' }}}"
+            COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.prod.yml}"
+
+            mkdir -p "$APP_DIR"
+            cd "$APP_DIR"
+
+            # Ensure env stays on the server (not committed)
+            if [ ! -f ".env" ]; then
+              echo "Missing .env in $APP_DIR; create it before deploying." >&2
+              exit 1
+            fi
+
+            # Build and restart
+            docker compose -f "$COMPOSE_FILE" pull || true
+            docker compose -f "$COMPOSE_FILE" build --pull
+            docker compose -f "$COMPOSE_FILE" up -d --remove-orphans
+
+            # Light cleanup to help with disk space
+            docker image prune -f
+            docker volume prune -f
+
