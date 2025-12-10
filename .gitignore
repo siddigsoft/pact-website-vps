@@ -4,6 +4,7 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+!Original-code-vps-source-only.tar.gz
 *.tar.bz2
 .env
 .env.local
