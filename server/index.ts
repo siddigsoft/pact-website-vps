@@ -29,6 +29,7 @@ const corsOptions = {
       'https://138.68.104.122',
       'http://138.68.104.122:5000',
       'https://138.68.104.122:5000',
+      'https://pact-website-vps-p9j9.onrender.com',
       process.env.PRODUCTION_URL, // Add your production URL here
     ].filter(Boolean); // Remove undefined values
     
