@@ -78,7 +78,7 @@ import {
 // Form schema matching the database schema
 const projectFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
+  description: z.string().nullable(),
   organization: z.string().nullable(),
   category: z.string().min(1, "Category is required"),
   bg_image: z.string().nullable(),
@@ -929,10 +929,10 @@ export default function ProjectsPage() {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description*</FormLabel>
+                      <FormLabel>Description</FormLabel>
                       <FormControl>
                         <RichTextEditor 
-                          value={field.value} 
+                          value={field.value || ''} 
                           onChange={field.onChange}
                           placeholder="Project description"
                         />
@@ -950,7 +950,7 @@ export default function ProjectsPage() {
                       <FormItem>
                         <FormLabel>Duration</FormLabel>
                         <FormControl>
-                          <Input {...field} value={field.value || ''} placeholder="e.g. January 2024 - March 2024" />
+                          <Input {...field} value={field.value || ''} placeholder="e.g. January 2024 - March 2024" autoComplete="off" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -979,7 +979,7 @@ export default function ProjectsPage() {
                       <FormItem>
                         <FormLabel>Location</FormLabel>
                         <FormControl>
-                          <Input {...field} value={field.value || ''} placeholder="e.g. Khartoum" />
+                          <Input {...field} value={field.value || ''} placeholder="e.g. Khartoum" autoComplete="off" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
