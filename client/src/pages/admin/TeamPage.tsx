@@ -812,12 +812,13 @@ export default function TeamPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="position">Position</Label>
+                <Label htmlFor="position">Position *</Label>
                 <Input
                   id="position"
                   value={formData.position}
                   onChange={(e) => setFormData({ ...formData, position: e.target.value })}
                   placeholder="Enter position"
+                  required
                 />
               </div>
               <div className="space-y-2">
@@ -860,7 +861,7 @@ export default function TeamPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="bio">Bio *</Label>
+              <Label htmlFor="bio">Bio</Label>
               <RichTextEditor
                 value={formData.bio}
                 onChange={(value) => setFormData({ ...formData, bio: value })}

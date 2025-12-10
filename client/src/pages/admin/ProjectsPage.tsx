@@ -79,7 +79,7 @@ import {
 const projectFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
-  organization: z.string().min(1, "Organization is required"),
+  organization: z.string().nullable(),
   category: z.string().min(1, "Category is required"),
   bg_image: z.string().nullable(),
   icon: z.string().nullable(),
@@ -914,9 +914,9 @@ export default function ProjectsPage() {
                     name="organization"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Organization*</FormLabel>
+                        <FormLabel>Organization</FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <Input {...field} value={field.value || ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
