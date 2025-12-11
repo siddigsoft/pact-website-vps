@@ -41,17 +41,18 @@ jobs:
 
       - name: Copy files to VPS
         run: |
-          # Create a tarball excluding unnecessary files
+          # Create a tarball in /tmp to avoid including it in the archive
           tar --exclude='.git' \
               --exclude='node_modules' \
               --exclude='.github' \
               --exclude='__MACOSX' \
               --exclude='*.log' \
               --exclude='.env' \
-              -czf deploy.tar.gz .
+              --exclude='deploy.tar.gz' \
+              -czf /tmp/deploy.tar.gz .
           
           # Copy tarball to VPS
-          scp -i ~/.ssh/pact_site_key -o StrictHostKeyChecking=no deploy.tar.gz ${{ env.VPS_USER }}@${{ env.VPS_HOST }}:${{ env.APP_DIR }}/
+          scp -i ~/.ssh/pact_site_key -o StrictHostKeyChecking=no /tmp/deploy.tar.gz ${{ env.VPS_USER }}@${{ env.VPS_HOST }}:${{ env.APP_DIR }}/
           
           # Extract on VPS
           ssh -i ~/.ssh/pact_site_key -o StrictHostKeyChecking=no ${{ env.VPS_USER }}@${{ env.VPS_HOST }} "
@@ -61,7 +62,7 @@ jobs:
           "
           
           # Clean up local tarball
-          rm deploy.tar.gz
+          rm -f /tmp/deploy.tar.gz
 
       - name: Setup environment file on VPS
         run: |
