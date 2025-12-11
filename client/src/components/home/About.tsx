@@ -1,7 +1,15 @@
 import { useRef, useState, useEffect } from 'react';
 import CountUp from 'react-countup';
 import { useScrollEffect } from '@/hooks/useScrollEffect';
-import { Award, Globe, Users, Handshake, CheckCircle, Calendar, Briefcase, Target, ArrowRight } from 'lucide-react';
+import { Award, Globe, Users, Handshake, CheckCircle, Calendar, Briefcase, Target, ArrowRight, X } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // Define the AboutContent interface
 interface AboutContent {
@@ -51,6 +59,7 @@ const FeatureItem = ({
 const About = () => {
   const [content, setContent] = useState<AboutContent | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const featureIcons: Record<string, React.ReactNode> = {
     CheckCircle: <CheckCircle className="h-5 w-5" />,
     Award: <Award className="h-5 w-5" />,
@@ -150,6 +159,9 @@ const About = () => {
     ?.split(/\n\n+/)         // Split on one or more blank lines
     ?.filter(paragraph => paragraph.trim() !== '') || []; // Only keep non-empty paragraphs
 
+  // Get only the first paragraph for the home page preview
+  const previewText = paragraphs[0] || '';
+
   return (
     <section className="bg-slate-50 py-12">
       <div className="container mx-auto px-4">
@@ -166,18 +178,16 @@ const About = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Left Column - Description */}
           <div className="lg:col-span-7 flex flex-col">
-            {/* Description Text */}
+            {/* Description Text - Show only first paragraph */}
             <div className="mb-6">
-              {paragraphs.map((paragraph, index) => (
-                <p key={index} className="mb-4 text-gray-600 leading-relaxed text-lg">
-                  {paragraph}
-                </p>
-              ))}
+              <p className="mb-4 text-gray-600 leading-relaxed text-lg">
+                {previewText}
+              </p>
             </div>
 
-            {/* Features */}
+            {/* Features - Show only 2 features */}
             <div className="grid md:grid-cols-2 gap-6 mb-6">
-              {content.features && content.features.slice(0, 4).map((feature, index) => (
+              {content.features && content.features.slice(0, 2).map((feature, index) => (
                 <FeatureItem
                   key={index}
                   icon={featureIcons[feature.icon as keyof typeof featureIcons] || <CheckCircle className="h-5 w-5" />}
@@ -188,17 +198,76 @@ const About = () => {
               ))}
             </div>
             
-            {/* Image Display */}
-            {content.image && (
-              <div className="relative">
-                <img 
-                  src={content.image} 
-                  alt="About PACT Consultancy" 
-                  className="w-full h-auto max-h-[400px] rounded-lg shadow-lg object-cover"
-                />
-                <div className="absolute inset-0 rounded-lg shadow-inner bg-gradient-to-r from-primary/10 to-transparent opacity-60"></div>
-              </div>
-            )}
+            {/* More Details Button with Dialog */}
+            <div className="mt-auto">
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <button className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg group">
+                    More Details
+                    <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[85vh] overflow-hidden flex flex-col [&>button]:z-50 [&>button]:w-10 [&>button]:h-10 [&>button]:bg-gray-100 [&>button]:hover:bg-gray-200 [&>button]:rounded-md [&>button]:right-6 [&>button]:flex [&>button]:items-center [&>button]:justify-center [&>button>svg]:w-6 [&>button>svg]:h-6 [&>button>svg]:stroke-[3]">
+                  {/* Fixed Header */}
+                  <DialogHeader className="pb-4 border-b sticky top-0 bg-white z-40">
+                    <DialogTitle className="text-3xl font-bold text-navy-900 mb-2 pr-12">
+                      About <span className="text-primary">PACT</span> Consultancy
+                    </DialogTitle>
+                    <DialogDescription className="text-base">
+                      {content.subtitle}
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  {/* Scrollable Content */}
+                  <div className="overflow-y-auto flex-1 pr-2">
+                    <div className="space-y-6">
+                      {/* Full Description */}
+                      <div className="space-y-4">
+                        {paragraphs.map((paragraph, index) => (
+                          <p key={index} className="text-gray-700 leading-relaxed text-base">
+                            {paragraph}
+                          </p>
+                        ))}
+                      </div>
+
+                      {/* All Features */}
+                      {content.features && content.features.length > 0 && (
+                        <div className="mt-8">
+                          <h3 className="text-xl font-semibold text-navy-800 mb-4">Our Strengths</h3>
+                          <div className="grid md:grid-cols-2 gap-4">
+                            {content.features.map((feature, index) => (
+                              <div 
+                                key={index}
+                                className="flex items-start p-4 bg-slate-50 rounded-lg border border-slate-200"
+                              >
+                                <div className="p-2 rounded-full bg-primary/10 text-primary mr-3 mt-1 flex-shrink-0">
+                                  {featureIcons[feature.icon as keyof typeof featureIcons] || <CheckCircle className="h-4 w-4" />}
+                                </div>
+                                <div>
+                                  <h4 className="font-semibold text-navy-800 mb-1">{feature.title}</h4>
+                                  <p className="text-sm text-gray-600">{feature.description}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Image if available */}
+                      {content.image && (
+                        <div className="mt-8 mb-4">
+                          <img 
+                            src={content.image} 
+                            alt="About PACT Consultancy" 
+                            className="w-full h-auto max-h-[400px] rounded-lg shadow-lg object-cover"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
                 </div>
 
           {/* Right Column - Vision, Mission, Values */}
