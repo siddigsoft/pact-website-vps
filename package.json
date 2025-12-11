@@ -9,7 +9,8 @@
     "build:full": "npm install && npm run build",
     "start": "NODE_ENV=production node dist/index.js",
     "check": "tsc",
-    "setup-storage": "node setup-storage.js"
+    "setup-storage": "node setup-storage.js",
+    "reset-users": "tsx reset-users.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
