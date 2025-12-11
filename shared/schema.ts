@@ -1,5 +1,4 @@
 import { pgTable, text, serial, integer, boolean, timestamp, json, jsonb, unique } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export const users = pgTable("users", {
@@ -152,105 +151,105 @@ export const locations = pgTable("locations", {
   updated_by: integer("updated_by").references(() => users.id),
 });
 
-// Insert schemas
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-  role: true,
+// Insert schemas - Manual Zod definitions
+export const insertUserSchema = z.object({
+  username: z.string(),
+  password: z.string(),
+  role: z.string().optional(),
 });
 
-export const insertContactMessageSchema = createInsertSchema(contactMessages).pick({
-  name: true,
-  email: true,
-  company: true,
-  subject: true,
-  message: true,
-});
-
-
-
-export const insertExpertiseContentSchema = createInsertSchema(expertiseContent).pick({
-  title: true,
-  description: true,
-  icon: true,
-  capabilities: true,
-  order_index: true,
-  updated_by: true,
-});
-
-export const insertServiceContentSchema = createInsertSchema(serviceContent).pick({
-  title: true,
-  description: true,
-  details: true,
-  image: true,
-  order_index: true,
-  updated_by: true,
-});
-
-export const insertClientContentSchema = createInsertSchema(clientContent).pick({
-  name: true,
-  logo: true,
-  type: true,
-  description: true,
-  url: true,
-  order_index: true,
-  updated_by: true,
-});
-
-export const insertProjectContentSchema = createInsertSchema(projectContent).pick({
-  title: true,
-  description: true,
-  organization: true,
-  category: true,
-  bg_image: true,
-  icon: true,
-  duration: true,
-  location: true,
-  image: true,
-  status: true,
-  order_index: true,
-  updated_by: true,
-});
-
-export const insertLocationSchema = createInsertSchema(locations).pick({
-  city: true,
-  country: true,
-  image: true,
-  address: true,
-  updated_by: true,
+export const insertContactMessageSchema = z.object({
+  name: z.string(),
+  email: z.string(),
+  company: z.string().nullable().optional(),
+  subject: z.string(),
+  message: z.string(),
 });
 
 
-export const insertBlogArticleSchema = createInsertSchema(blogArticles).pick({
-  title: true,
-  excerpt: true,
-  content: true,
-  category: true,
-  image: true,
-  status: true,
-  slug: true,
-  meta_description: true,
-  keywords: true,
-  author_name: true,
-  author_position: true,
-  author_avatar: true,
-  published_at: true,
-  updated_by: true,
+
+export const insertExpertiseContentSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  icon: z.string(),
+  capabilities: z.array(z.string()),
+  order_index: z.number().optional(),
+  updated_by: z.number().optional(),
 });
 
-export const insertBlogArticleServiceSchema = createInsertSchema(blogArticleServices).pick({
-  blog_article_id: true,
-  service_id: true,
+export const insertServiceContentSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  details: z.array(z.string()),
+  image: z.string().nullable().optional(),
+  order_index: z.number().optional(),
+  updated_by: z.number().optional(),
 });
 
-export const insertBlogArticleProjectSchema = createInsertSchema(blogArticleProjects).pick({
-  blog_article_id: true,
-  project_id: true,
+export const insertClientContentSchema = z.object({
+  name: z.string(),
+  logo: z.string().nullable().optional(),
+  type: z.string().optional(),
+  description: z.string().optional(),
+  url: z.string().nullable().optional(),
+  order_index: z.number().optional(),
+  updated_by: z.number().optional(),
 });
 
-export const insertProjectServiceSchema = createInsertSchema(projectServices).pick({
-  project_id: true,
-  service_id: true,
+export const insertProjectContentSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  organization: z.string(),
+  category: z.string().optional(),
+  bg_image: z.string().nullable().optional(),
+  icon: z.string().nullable().optional(),
+  duration: z.string().nullable().optional(),
+  location: z.string().nullable().optional(),
+  image: z.string().nullable().optional(),
+  status: z.enum(["draft", "in_progress", "completed", "archived"]).optional(),
+  order_index: z.number().optional(),
+  updated_by: z.number().optional(),
+});
+
+export const insertLocationSchema = z.object({
+  city: z.string(),
+  country: z.string(),
+  image: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
+  updated_by: z.number().optional(),
+});
+
+
+export const insertBlogArticleSchema = z.object({
+  title: z.string(),
+  excerpt: z.string().optional(),
+  content: z.string(),
+  category: z.string(),
+  image: z.string().nullable().optional(),
+  status: z.string().optional(),
+  slug: z.string(),
+  meta_description: z.string().nullable().optional(),
+  keywords: z.array(z.string()).optional(),
+  author_name: z.string().nullable().optional(),
+  author_position: z.string().nullable().optional(),
+  author_avatar: z.string().nullable().optional(),
+  published_at: z.date().optional(),
+  updated_by: z.number().optional(),
+});
+
+export const insertBlogArticleServiceSchema = z.object({
+  blog_article_id: z.number(),
+  service_id: z.number(),
+});
+
+export const insertBlogArticleProjectSchema = z.object({
+  blog_article_id: z.number(),
+  project_id: z.number(),
+});
+
+export const insertProjectServiceSchema = z.object({
+  project_id: z.number(),
+  service_id: z.number(),
 });
 
 export const aboutContent = pgTable("about_content", {
@@ -281,17 +280,21 @@ export const footerContent = pgTable("footer_content", {
   updated_by: integer("updated_by").references(() => users.id),
 });
 
-export const insertFooterContentSchema = createInsertSchema(footerContent).pick({
-  company_description: true,
-  address: true,
-  phone: true,
-  email: true,
-  social_links: true,
-  copyright_text: true,
-  privacy_link: true,
-  terms_link: true,
-  sitemap_link: true,
-  updated_by: true,
+export const insertFooterContentSchema = z.object({
+  company_description: z.string(),
+  address: z.string(),
+  phone: z.string(),
+  email: z.string(),
+  social_links: z.array(z.object({
+    name: z.string(),
+    url: z.string(),
+    icon: z.string()
+  })).optional(),
+  copyright_text: z.string(),
+  privacy_link: z.string().optional(),
+  terms_link: z.string().optional(),
+  sitemap_link: z.string().optional(),
+  updated_by: z.number().optional(),
 });
 
 // Types
@@ -362,23 +365,23 @@ export const teamMemberServices = pgTable("team_member_services", {
   }
 });
 
-export const insertTeamMemberSchema = createInsertSchema(teamMembersTable).pick({
-  name: true,
-  position: true,
-  department: true,
-  location: true,
-  bio: true,
-  expertise: true,
-  image: true,
-  slug: true,
-  metaDescription: true,
-  email: true,
-  linkedin: true,
+export const insertTeamMemberSchema = z.object({
+  name: z.string(),
+  position: z.string(),
+  department: z.string(),
+  location: z.string(),
+  bio: z.string(),
+  expertise: z.array(z.string()),
+  image: z.string().nullable().optional(),
+  slug: z.string(),
+  metaDescription: z.string().nullable().optional(),
+  email: z.string(),
+  linkedin: z.string(),
 });
 
-export const insertTeamMemberServiceSchema = createInsertSchema(teamMemberServices).pick({
-  team_member_id: true,
-  service_id: true,
+export const insertTeamMemberServiceSchema = z.object({
+  team_member_id: z.number(),
+  service_id: z.number(),
 });
 
 // Add team member types
@@ -404,31 +407,35 @@ export const heroSlides = pgTable("hero_slides", {
   updated_by: integer("updated_by").references(() => users.id),
 });
 
-export const insertHeroSlideSchema = createInsertSchema(heroSlides).pick({
-  title: true,
-  subtitle: true,
-  description: true,
-  actionText: true,
-  actionLink: true,
-  backgroundImage: true,
-  category: true,
-  videoBackground: true,
-  accentColor: true,
-  order_index: true,
-  updated_by: true,
+export const insertHeroSlideSchema = z.object({
+  title: z.string(),
+  subtitle: z.string().optional(),
+  description: z.string(),
+  actionText: z.string(),
+  actionLink: z.string(),
+  backgroundImage: z.string(),
+  category: z.string().nullable().optional(),
+  videoBackground: z.string().nullable().optional(),
+  accentColor: z.string().nullable().optional(),
+  order_index: z.number().optional(),
+  updated_by: z.number().optional(),
 });
 
 export type InsertHeroSlide = z.infer<typeof insertHeroSlideSchema>;
 export type HeroSlide = typeof heroSlides.$inferSelect;
 
-export const insertAboutContentSchema = createInsertSchema(aboutContent).pick({
-  title: true,
-  subtitle: true,
-  description: true,
-  image: true,
-  features: true,
-  client_retention_rate: true,
-  updated_by: true,
+export const insertAboutContentSchema = z.object({
+  title: z.string(),
+  subtitle: z.string().nullable().optional(),
+  description: z.string(),
+  image: z.string().nullable().optional(),
+  features: z.array(z.object({
+    title: z.string(),
+    description: z.string(),
+    icon: z.string()
+  })),
+  client_retention_rate: z.number().optional(),
+  updated_by: z.number().optional(),
 });
 
 export const impactStats = pgTable("impact_stats", {
