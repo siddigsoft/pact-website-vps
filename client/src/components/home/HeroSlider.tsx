@@ -258,23 +258,24 @@ const HeroSlider = () => {
         <span className="text-xl text-white/60">{slides.length}</span>
       </div>
 
-      {/* Navigation Buttons - BearingPoint style (rectangular) */}
-      <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 md:left-auto md:right-8 md:translate-x-0 z-20 flex space-x-3">
-        <button 
-          onClick={scrollPrev} 
-          className="bg-white/10 hover:bg-white/20 text-white p-2.5 md:p-2.5 transition-all duration-300 hover:scale-110 backdrop-blur-sm"
-          aria-label="Previous slide"
-        >
-          <ChevronLeft className="w-5 h-5 md:w-5 md:h-5" />
-        </button>
-        <button 
-          onClick={scrollNext} 
-          className="bg-white/10 hover:bg-white/20 text-white p-2.5 md:p-2.5 transition-all duration-300 hover:scale-110 backdrop-blur-sm"
-          aria-label="Next slide"
-        >
-          <ChevronRight className="w-5 h-5 md:w-5 md:h-5" />
-        </button>
-      </div>
+      {/* Navigation Buttons - Positioned at extreme ends on mobile, bottom-right on desktop */}
+      {/* Previous Button - Left Side */}
+      <button 
+        onClick={scrollPrev} 
+        className="absolute bottom-4 left-4 md:bottom-8 md:left-auto md:right-20 z-20 bg-white/10 hover:bg-white/20 text-white p-2.5 md:p-2.5 transition-all duration-300 hover:scale-110 backdrop-blur-sm"
+        aria-label="Previous slide"
+      >
+        <ChevronLeft className="w-5 h-5 md:w-5 md:h-5" />
+      </button>
+      
+      {/* Next Button - Right Side */}
+      <button 
+        onClick={scrollNext} 
+        className="absolute bottom-4 right-4 md:bottom-8 md:right-8 z-20 bg-white/10 hover:bg-white/20 text-white p-2.5 md:p-2.5 transition-all duration-300 hover:scale-110 backdrop-blur-sm"
+        aria-label="Next slide"
+      >
+        <ChevronRight className="w-5 h-5 md:w-5 md:h-5" />
+      </button>
 
       {/* Slide Indicators - BearingPoint horizontal lines style */}
       <div className="absolute bottom-24 left-8 right-8 z-20 hidden md:flex gap-2 w-48">
