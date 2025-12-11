@@ -258,7 +258,10 @@ export const aboutContent = pgTable("about_content", {
   subtitle: text("subtitle"),
   description: text("description").notNull(),
   image: text("image"),
-  features: json("features").$type<{title: string, description: string, icon: string}[]>().notNull(),
+  features: json("features").$type<{title: string, description: string, icon: string}[]>(),
+  vision: text("vision"),
+  mission: text("mission"),
+  core_values: jsonb("core_values").$type<string[]>(),
   client_retention_rate: integer("client_retention_rate").default(97),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
   updated_by: integer("updated_by").references(() => users.id),
@@ -433,7 +436,10 @@ export const insertAboutContentSchema = z.object({
     title: z.string(),
     description: z.string(),
     icon: z.string()
-  })),
+  })).optional(),
+  vision: z.string().nullable().optional(),
+  mission: z.string().nullable().optional(),
+  core_values: z.array(z.string()).nullable().optional(),
   client_retention_rate: z.number().optional(),
   updated_by: z.number().optional(),
 });
