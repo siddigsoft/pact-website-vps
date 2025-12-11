@@ -1,7 +1,9 @@
 import { defineConfig } from "drizzle-kit";
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL, ensure the database is provisioned");
+// Only require DATABASE_URL if we're actually using drizzle (not when using Supabase)
+const dbUrl = process.env.DATABASE_URL;
+if (!dbUrl && process.env.NODE_ENV === 'development') {
+  console.warn("DATABASE_URL not set - drizzle commands will not work");
 }
 
 export default defineConfig({
@@ -9,6 +11,6 @@ export default defineConfig({
   schema: "./shared/schema.ts",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL,
+    url: dbUrl || "postgresql://dummy:dummy@localhost:5432/dummy", // fallback for when not using drizzle
   },
 });
