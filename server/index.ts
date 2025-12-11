@@ -30,6 +30,14 @@ const corsOptions = {
       'http://138.68.104.122:5000',
       'https://138.68.104.122:5000',
       'https://pact-website-vps-p9j9.onrender.com',
+      'http://pactorg.com',
+      'https://pactorg.com',
+      'http://www.pactorg.com',
+      'https://www.pactorg.com',
+      'http://pactorg1.com',
+      'https://pactorg1.com',
+      'http://www.pactorg1.com',
+      'https://www.pactorg1.com',
       process.env.PRODUCTION_URL, // Add your production URL here
     ].filter(Boolean); // Remove undefined values
     
