@@ -230,17 +230,17 @@ const About = () => {
         </div>
 
         {/* Main Content Section - Grid with equal heights */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
           {/* Left Column - Description */}
           <div className="lg:col-span-7 flex flex-col h-full">
             {/* Card wrapper for left content */}
-            <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md h-full flex flex-col transition-all duration-500 hover:shadow-xl">
+            <div className="bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-md h-full flex flex-col transition-all duration-500 hover:shadow-xl">
               {/* Description Text - Show only first paragraph */}
               <div className="mb-4 sm:mb-6">
-                <h3 className="text-xl sm:text-2xl font-bold text-navy-900 mb-3 sm:mb-4">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-navy-900 mb-3 sm:mb-4">
                   Who We Are
                 </h3>
-                <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
                   {previewText}
                 </p>
               </div>
@@ -269,9 +269,9 @@ const About = () => {
               <div className="mt-auto pt-3 sm:pt-4 border-t border-slate-200">
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
-                    <button className="w-full inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-500 shadow-md hover:shadow-lg group hover:scale-[1.02]">
+                    <button className="w-full inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-500 shadow-md hover:shadow-lg group hover:scale-[1.02] text-sm sm:text-base min-h-[44px]">
                       More Details
-                      <ArrowRight className="h-5 w-5 group-hover:translate-x-2 transition-transform duration-500" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-2 transition-transform duration-500" />
                     </button>
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl w-[95vw] sm:w-[90vw] md:w-full max-h-[90vh] sm:max-h-[85vh] overflow-hidden flex flex-col duration-600 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-100 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] [&>button]:z-50 [&>button]:w-8 [&>button]:h-8 sm:[&>button]:w-10 sm:[&>button]:h-10 [&>button]:bg-gray-100 [&>button]:hover:bg-gray-200 [&>button]:hover:scale-110 [&>button]:rounded-md [&>button]:right-4 sm:[&>button]:right-6 [&>button]:top-4 sm:[&>button]:top-4 [&>button]:flex [&>button]:items-center [&>button]:justify-center [&>button>svg]:w-5 [&>button>svg]:h-5 sm:[&>button>svg]:w-6 sm:[&>button>svg]:h-6 [&>button>svg]:stroke-[3] [&>button]:transition-all [&>button]:duration-500">
@@ -341,49 +341,49 @@ const About = () => {
 
           {/* Right Column - Vision, Mission, Values */}
           <div className="lg:col-span-5">
-            <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md w-full h-full flex flex-col justify-between transition-all duration-500 hover:shadow-xl">
+            <div className="bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-md w-full h-full flex flex-col justify-between transition-all duration-500 hover:shadow-xl">
               {/* Vision */}
-              <div className="mb-6 sm:mb-8">
-                <div className="flex items-center mb-3 sm:mb-4">
-                  <Target className="h-5 w-5 sm:h-6 sm:w-6 text-primary mr-2 sm:mr-3 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
-                  <h4 className="text-lg sm:text-xl font-semibold text-navy-800 pb-1 border-b-2 border-primary">
+              <div className="mb-4 sm:mb-6 md:mb-8">
+                <div className="flex items-center mb-2 sm:mb-3 md:mb-4">
+                  <Target className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary mr-2 sm:mr-3 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
+                  <h4 className="text-base sm:text-lg md:text-xl font-semibold text-navy-800 pb-1 border-b-2 border-primary">
                     Vision / Core Purpose
                   </h4>
                 </div>
-                <p className="italic text-gray-700 pl-6 sm:pl-9 border-l-2 border-primary/30 py-2 text-sm sm:text-base transition-colors duration-500 hover:border-primary">
+                <p className="italic text-gray-700 pl-6 sm:pl-8 md:pl-9 border-l-2 border-primary/30 py-2 text-xs sm:text-sm md:text-base transition-colors duration-500 hover:border-primary">
                   {content.vision || defaultVision}
                 </p>
               </div>
 
               {/* Mission */}
-              <div className="mb-6 sm:mb-8">
-                <div className="flex items-center mb-3 sm:mb-4">
-                  <Globe className="h-5 w-5 sm:h-6 sm:w-6 text-primary mr-2 sm:mr-3 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
-                  <h4 className="text-lg sm:text-xl font-semibold text-navy-800 pb-1 border-b-2 border-primary">
+              <div className="mb-4 sm:mb-6 md:mb-8">
+                <div className="flex items-center mb-2 sm:mb-3 md:mb-4">
+                  <Globe className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary mr-2 sm:mr-3 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
+                  <h4 className="text-base sm:text-lg md:text-xl font-semibold text-navy-800 pb-1 border-b-2 border-primary">
                     Mission
                   </h4>
                 </div>
-                <p className="italic text-gray-700 pl-6 sm:pl-9 border-l-2 border-primary/30 py-2 text-sm sm:text-base transition-colors duration-500 hover:border-primary">
+                <p className="italic text-gray-700 pl-6 sm:pl-8 md:pl-9 border-l-2 border-primary/30 py-2 text-xs sm:text-sm md:text-base transition-colors duration-500 hover:border-primary">
                   {content.mission || defaultMission}
                 </p>
               </div>
 
               {/* Core Values */}
                 <div>
-                <div className="flex items-center mb-3 sm:mb-4">
-                  <Award className="h-5 w-5 sm:h-6 sm:w-6 text-primary mr-2 sm:mr-3 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
-                  <h4 className="text-lg sm:text-xl font-semibold text-navy-800 pb-1 border-b-2 border-primary">
+                <div className="flex items-center mb-2 sm:mb-3 md:mb-4">
+                  <Award className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary mr-2 sm:mr-3 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
+                  <h4 className="text-base sm:text-lg md:text-xl font-semibold text-navy-800 pb-1 border-b-2 border-primary">
                     Core Values
                   </h4>
                 </div>
-                <div className="space-y-2 pl-2 sm:pl-3">
+                <div className="space-y-1.5 sm:space-y-2 pl-2 sm:pl-3">
                   {(content.core_values || defaultCoreValues).map((value, index) => (
                     <div 
                       key={index}
                       className="flex items-center p-2 sm:p-2.5 bg-slate-50 border-l-4 border-primary rounded-r text-gray-700 hover:bg-primary/5 hover:border-primary/80 transition-all duration-500 hover:translate-x-2 hover:shadow-sm"
                     >
                       <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 text-primary mr-2 sm:mr-3 flex-shrink-0 transition-transform duration-500 group-hover:translate-x-1" />
-                      <span className="text-sm sm:text-base">{value}</span>
+                      <span className="text-xs sm:text-sm md:text-base">{value}</span>
               </div>
                   ))}
                 </div>

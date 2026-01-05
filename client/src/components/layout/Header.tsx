@@ -173,25 +173,25 @@ const Header = () => {
         mobileMenuOpen ? "max-h-screen" : "max-h-0"
       )}>
         <nav className="container mx-auto px-4 md:px-8 py-4 flex flex-col divide-y divide-white/10">
-          <a href="/" onClick={navigateTo("/")} className="font-medium text-white py-3 hover:text-accent">
+          <a href="/" onClick={navigateTo("/")} className="font-medium text-white py-3 hover:text-accent active:bg-white/10 px-2 rounded text-base min-h-[44px] flex items-center">
             Home
           </a>
-          <a href="/services" onClick={navigateTo("/services")} className="font-medium text-white py-3 hover:text-accent">
+          <a href="/services" onClick={navigateTo("/services")} className="font-medium text-white py-3 hover:text-accent active:bg-white/10 px-2 rounded text-base min-h-[44px] flex items-center">
             Services
           </a>
-          <a href="/projects" onClick={navigateTo("/projects")} className="font-medium text-white py-3 hover:text-accent">
+          <a href="/projects" onClick={navigateTo("/projects")} className="font-medium text-white py-3 hover:text-accent active:bg-white/10 px-2 rounded text-base min-h-[44px] flex items-center">
             Projects
           </a>
-          <a href="/team" onClick={navigateTo("/team")} className="font-medium text-white py-3 hover:text-accent">
+          <a href="/team" onClick={navigateTo("/team")} className="font-medium text-white py-3 hover:text-accent active:bg-white/10 px-2 rounded text-base min-h-[44px] flex items-center">
             Team
           </a>
-          <a href="/clients" onClick={navigateTo("/clients")} className="font-medium text-white py-3 hover:text-accent">
+          <a href="/clients" onClick={navigateTo("/clients")} className="font-medium text-white py-3 hover:text-accent active:bg-white/10 px-2 rounded text-base min-h-[44px] flex items-center">
             Clients
           </a>
-          <a href="/news" onClick={navigateTo("/news")} className="font-medium text-white py-3 hover:text-accent">
+          <a href="/news" onClick={navigateTo("/news")} className="font-medium text-white py-3 hover:text-accent active:bg-white/10 px-2 rounded text-base min-h-[44px] flex items-center">
             News
           </a>
-          <a href="/contact" onClick={navigateTo("/contact")} className="font-medium text-white py-3 hover:text-accent">
+          <a href="/contact" onClick={navigateTo("/contact")} className="font-medium text-white py-3 hover:text-accent active:bg-white/10 px-2 rounded text-base min-h-[44px] flex items-center">
             Contact
           </a>
         </nav>

@@ -172,45 +172,45 @@ const HeroSlider = () => {
         <div className="embla__container flex h-full">
           {slides.map((slide) => (
             <div key={slide.id} className="embla__slide relative min-w-full h-full flex">
-              {/* Content Card (Left Side) */}
+              {/* Content Card (Left Side) - Mobile Optimized */}
               <div className="relative z-10 w-full md:w-3/5 lg:w-1/2 flex items-center">
-                <div className="bg-black bg-opacity-70 p-6 md:p-12 rounded-md max-w-4xl mx-auto md:ml-12 lg:ml-24">
+                <div className="bg-black bg-opacity-70 p-4 sm:p-6 md:p-8 lg:p-12 mx-4 sm:mx-6 md:mx-0 rounded-md max-w-4xl md:ml-12 lg:ml-24">
                   {slide.category && (
-                    <div 
-                      className="mb-4 text-sm md:text-base uppercase tracking-wider font-bold inline-block px-3 py-1 rounded-sm"
+                    <div
+                      className="mb-3 sm:mb-4 text-xs sm:text-sm md:text-base uppercase tracking-wider font-bold inline-block px-2 py-1 sm:px-3 sm:py-1.5 rounded-sm"
                       style={{ backgroundColor: slide.accentColor || '#FF8200' }}
                     >
                       {slide.category}
                     </div>
                   )}
-                  
-                  <h1 className="text-4xl font-bold mb-4 text-navy-900">
+
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 text-navy-900 leading-tight">
                     {slide.title}
-                    {slide.subtitle && <span className="block mt-2 text-accent">{slide.subtitle}</span>}
+                    {slide.subtitle && <span className="block mt-1 sm:mt-2 text-accent text-lg sm:text-xl md:text-2xl lg:text-3xl">{slide.subtitle}</span>}
                   </h1>
-                  
-                  <div className="h-1.5 w-24 mb-6" style={{ backgroundColor: slide.accentColor || '#FF8200' }}></div>
-                  
-                  <p className="text-lg md:text-xl mb-10 text-white/90 max-w-2xl font-light">
+
+                  <div className="h-1 w-16 sm:w-20 md:w-24 mb-4 sm:mb-6" style={{ backgroundColor: slide.accentColor || '#FF8200' }}></div>
+
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 md:mb-10 text-white/90 max-w-2xl font-light leading-relaxed">
                     {slide.description}
                   </p>
-                  
-                  <div className="flex flex-col sm:flex-row gap-5">
-                    <div className="flex flex-col sm:flex-row gap-5 w-full">
-                      <Link 
-                        href={slide.actionLink} 
-                        className="flex items-center justify-center w-full sm:w-auto text-white py-3 px-6 rounded-sm transition-all duration-300 text-center uppercase tracking-wide text-sm md:text-base font-medium hover:scale-105 hover:shadow-lg"
+
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5 w-full">
+                      <Link
+                        href={slide.actionLink}
+                        className="flex items-center justify-center w-full sm:w-auto text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-sm transition-all duration-300 text-center uppercase tracking-wide text-xs sm:text-sm md:text-base font-medium hover:scale-105 hover:shadow-lg min-h-[44px]"
                         style={{ backgroundColor: slide.accentColor || '#FF8200' }}
                       >
                         <span>{slide.actionText}</span>
-                        <ArrowRight className="ml-2 w-5 h-5" />
+                        <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                       </Link>
-                      <Link 
-                        href="/contact" 
-                        className="flex items-center justify-center w-full sm:w-auto text-white py-3 px-6 rounded-sm transition-all duration-300 text-center uppercase tracking-wide text-sm md:text-base font-medium border-2 border-white/60 hover:bg-white/10 hover:scale-105"
+                      <Link
+                        href="/contact"
+                        className="flex items-center justify-center w-full sm:w-auto text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-sm transition-all duration-300 text-center uppercase tracking-wide text-xs sm:text-sm md:text-base font-medium border-2 border-white/60 hover:bg-white/10 hover:scale-105 min-h-[44px]"
                       >
                         <span>Contact Us</span>
-                        <ArrowRight className="ml-2 w-5 h-5" />
+                        <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                       </Link>
                     </div>
                   </div>

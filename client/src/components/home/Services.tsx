@@ -10,9 +10,9 @@ import { Skeleton } from '@/components/ui/ContentSkeleton';
 
 const ServiceCard = ({ service }: { service: ServiceItem }) => {
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
       {/* Image Header with Badge */}
-      <div className="relative h-52">
+      <div className="relative h-48 sm:h-52">
         <img 
           src={service.image} 
           alt={service.title} 
@@ -21,34 +21,34 @@ const ServiceCard = ({ service }: { service: ServiceItem }) => {
             (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Service+Image';
           }}
         />
-        <div className="absolute top-4 left-4">
-          <span className="inline-block bg-[#FF6B35] text-white text-xs font-medium px-3 py-1.5 rounded">
+        <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
+          <span className="inline-block bg-[#FF6B35] text-white text-xs font-medium px-2 py-1 sm:px-3 sm:py-1.5 rounded">
             PACT SERVICES
           </span>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         
         {/* Title */}
-        <h3 className="text-2xl font-bold text-[#1B365D] mb-3">
+        <h3 className="text-lg sm:text-2xl font-bold text-[#1B365D] mb-2 sm:mb-3">
           {service.title}
         </h3>
 
         {/* Description */}
-        <p className="text-gray-600 mb-6">
+        <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
           {service.description}
         </p>
 
         {/* Action Links */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-between pt-3 sm:pt-4 border-t border-gray-100">
           <Link 
             href={`/services#${service.id}`}
-            className="flex items-center text-[#FF6B35] hover:text-[#1B365D] transition-colors"
+            className="flex items-center text-[#FF6B35] hover:text-[#1B365D] transition-colors text-sm sm:text-base"
           >
             <span className="mr-2">Details</span>
-            <ArrowRight size={16} />
+            <ArrowRight size={14} className="sm:w-4 sm:h-4" />
           </Link>
         </div>
       </div>
@@ -141,7 +141,7 @@ const Services = () => {
         )}
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {services.length > 0 ? (
             services.slice(0, 6).map((service) => (
               <ServiceCard 
@@ -150,8 +150,8 @@ const Services = () => {
               />
             ))
           ) : (
-            <div className="col-span-3 bg-gray-50 p-8 rounded-lg text-center">
-              <p className="text-gray-500">No services available at the moment.</p>
+            <div className="col-span-1 sm:col-span-2 lg:col-span-3 bg-gray-50 p-6 sm:p-8 rounded-lg text-center">
+              <p className="text-gray-500 text-sm sm:text-base">No services available at the moment.</p>
             </div>
           )}
         </div>
