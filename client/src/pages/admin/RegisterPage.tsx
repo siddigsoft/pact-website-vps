@@ -5,6 +5,13 @@ function RegisterPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8">
+        <div className="text-center mb-6">
+          <img 
+            src="/pact-logo.png" 
+            alt="PACT Consultancy Logo" 
+            className="h-16 mx-auto mb-4"
+          />
+        </div>
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="text-4xl mb-4">😂 😂 😂</CardTitle>

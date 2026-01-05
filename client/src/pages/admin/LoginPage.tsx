@@ -58,6 +58,13 @@ export default function AdminLoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8">
         <div className="text-center mb-6">
+          <div className="mb-4">
+            <img 
+              src="/pact-logo.png" 
+              alt="PACT Consultancy Logo" 
+              className="h-16 mx-auto"
+            />
+          </div>
           <h1 className="text-3xl font-bold">PACT CMS</h1>
           <p className="text-gray-600 mt-2">Content Management System</p>
         </div>
@@ -102,7 +109,7 @@ export default function AdminLoginPage() {
         </Card>
         
         <div className="mt-4 text-center text-sm text-gray-500">
-          <p>For demo: Username: admin, Password: admin</p>
+          {/* <p>For demo: Username: admin, Password: admin</p> */}
           <p className="mt-2">
             Don&apos;t have an account?{' '}
             <a href="/admin/register" className="text-primary underline hover:text-primary/80">Register here</a>
