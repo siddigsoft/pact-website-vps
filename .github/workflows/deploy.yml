@@ -1,4 +1,4 @@
-name: Deploy to IP
+name: Deploy to IP (PM2)
 
 on:
   push:
@@ -9,57 +9,38 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set image tag
-        id: image
-        run: |
-          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-          REPO_NAME=$(echo "$REPO_LOWER" | cut -d'/' -f2)
-          echo "tag=mukisavaniah/${REPO_NAME}:latest" >> $GITHUB_OUTPUT
-          echo "Image tag: mukisavaniah/${REPO_NAME}:latest"
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: mukisavaniah
-          password: dckr_pat_6XoWRCqi6aqhQ1CTVzdmSmm6k9g
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.image.outputs.tag }}
-
-      - name: Deploy to VPS (via SSH)
+      - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          envs: IMAGE_TAG
-        env:
-          IMAGE_TAG: ${{ steps.image.outputs.tag }}
-        script: |
-          # Create directory if it doesn't exist
-          mkdir -p /root/pact-website-vps
-          cd /root/pact-website-vps
+          script: |
+            # === 1. Go to app directory ===
+            cd /root/pact-website || exit 1
 
-          # Pull latest code (for docker-compose.yml and nginx.conf)
-          if [ -d ".git" ]; then
+            # === 2. Pull latest code ===
+            git reset --hard
             git pull origin main
-          else
-            git clone https://github.com/Ssemaganda-George/pact-website-vps .
-          fi
 
-          # Export IMAGE_TAG for docker-compose
-          export IMAGE_TAG=$IMAGE_TAG
+            # === 3. Rebuild frontend & backend ===
+            npm ci
+            npm run build
 
-          # Deploy with Docker Compose
-          docker-compose pull
-          docker-compose up -d --remove-orphans
-          
-          # Cleanup
-          docker system prune -f
+            # === 4. Copy assets to server/public ===
+            rm -rf server/public
+            mkdir -p server/public
+            cp -r dist/public/* server/public/
+
+            # === 5. Restart PM2 app ===
+            pm2 delete pact-website 2>/dev/null || true
+            pm2 start server/index.ts --name pact-website --interpreter tsx
+            pm2 save
+
+            # === 6. Reload Nginx (in case of config changes) ===
+            nginx -t && systemctl reload nginx
+
+            echo "✅ Deployment complete: https://pactorg.com"
