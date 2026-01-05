@@ -15,9 +15,58 @@ jobs:
       - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
+          host: 138.68.104.122
+          username: root
+          key: |
+            -----BEGIN OPENSSH PRIVATE KEY-----
+            b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAACFwAAAAdzc2gtcn
+            NhAAAAAwEAAQAAAgEAxBC+EOOm/gQAAUp362d69WPqsxPXIXFgCqmIUAYUQyvK3qOXKd3v
+            tF5TO6WBtAzaUoK8jmXrelC/6++vZH188iaWaJXjLLBY6ltRKcjgMnVszOYK5kuQy63f+Q
+            LCjFrKDasVQpkvuYakAvi+J3nNu4EmrnCsG687mQb6PyTg89CtkWFSBpfpk4Pg3jeI/VuI
+            mX2r/LL1MjlU+M5CLyH3qXzIHLyvs8oCHIExzc1VX3o2N47hf6q1FBn/g7L9/vKZT+1Ttk
+            9w6/dgNqrQHUi0disAPR9QMFDxPAfPJqkLrN3xHD0CuLkC7Y2VnGDOW1d+viHwUj7LCysn
+            lM6QhczxL6x5KGk2uw5RaCiSDu7TcF8BLQEYPyVFWk2iz+SiZfrtOfzL9UFZgDLcxr8qNP
+            OUJnxYLFHdX8iilIsAy+PduqpmjqnqGdHyynasmv8aEgUT42hV2YCdycuuDyThXtLytoZl
+            +LINV+CWlxfavJYzHAdemFfoMGHCgvmGrf8lsUn0i/s7AulsswvNeH5znOlgKmlePQ/wXk
+            mF91kF+lW0YzQj5/TsW0QJCwAoXL4aaWWSN6t92y55Sp8nDNjryXnpxfXpPour5HDqR19k
+            SvwdK0oyNmxyJneKZbOmbUvRV0fuyqCkK2Q/DVCqfwyziuvAONnSVdRzxwLGPg4h7C1+k9
+            cAAAdQYilTfWIpU30AAAAHc3NoLXJzYQAAAgEAxBC+EOOm/gQAAUp362d69WPqsxPXIXFg
+            CqmIUAYUQyvK3qOXKd3vtF5TO6WBtAzaUoK8jmXrelC/6++vZH188iaWaJXjLLBY6ltRKc
+            jgMnVszOYK5kuQy63f+QLCjFrKDasVQpkvuYakAvi+J3nNu4EmrnCsG687mQb6PyTg89Ct
+            kWFSBpfpk4Pg3jeI/VuImX2r/LL1MjlU+M5CLyH3qXzIHLyvs8oCHIExzc1VX3o2N47hf6
+            q1FBn/g7L9/vKZT+1Ttk9w6/dgNqrQHUi0disAPR9QMFDxPAfPJqkLrN3xHD0CuLkC7Y2V
+            nGDOW1d+viHwUj7LCysnlM6QhczxL6x5KGk2uw5RaCiSDu7TcF8BLQEYPyVFWk2iz+SiZf
+            rtOfzL9UFZgDLcxr8qNPOUJnxYLFHdX8iilIsAy+PduqpmjqnqGdHyynasmv8aEgUT42hV
+            2YCdycuuDyThXtLytoZl+LINV+CWlxfavJYzHAdemFfoMGHCgvmGrf8lsUn0i/s7Aulssw
+            vNeH5znOlgKmlePQ/wXkmF91kF+lW0YzQj5/TsW0QJCwAoXL4aaWWSN6t92y55Sp8nDNjr
+            yXnpxfXpPour5HDqR19kSvwdK0oyNmxyJneKZbOmbUvRV0fuyqCkK2Q/DVCqfwyziuvAON
+            nSVdRzxwLGPg4h7C1+k9cAAAADAQABAAACAQC+WrLtmtiqjh+jITXEazdJv7RCIOUhJv3j
+            3Czn5L8PaBkShylgEIWFTH7qzglbUY81xJBkgDdbDcMHwjE7E0qXnzcwWzWwUZZCEl5+fv
+            SMiM0VMdMrO/pchXeKP0+7DPpWwt9lRWy8ZygdanrTwMIpZX60pdezGTJ3o/qaC6gLj3K0
+            TxRgKmUwPz23AZwSvyekPgsY0HaWSGtjFH3VXNkiyG9Q1zCPEXVzT0uXT9+vTuwMjMAKPy
+            aHWaZlqwZG3CpVG0nHGuG7dvUGnlhn1gq/H4ifzyL/hdZwPfS0yDL5ppFMpT9bMOTS1j+H
+            D8XJkO0Qk8rLTwO62C8ZnmNaRFt0BqoTfE8s8OLQzI8qkeWFFWEIqZgrwZJf3sQ+he3q4A
+            5jo7tUh04bNHRt5MtBjY/IFHD94hPoPVRJKkxmVZtIWxomfhZOkws3UDHrXQQWiaS/40im
+            WiK+OLYr4bAL/DlmGIcuUHOAKltS8BRnN56HVu/kOjDCAQW83yzbls0MAVyWKHGAXJ84j/
+            /It/YQ7Flg6TFjEH1F9ZLX8jA6qRitiA1udqmYYPw03qp5jwRbQUY8QJFXsfJliGJwHrss
+            uZjF0jaKP6xt6GoKm0rzJoyxclLTPhjXhxQEGYyp3oY9CzEjHmPDOwAY+fRe4awhy8fkBH
+            HIPn7bhwSGx0+63SYxQQAAAQEAnAycDvxabZF8FoT3TedXqyIj2F89XUsGZuhE1zd+h85f
+            8n/TCd9kfSyT19svgvGVJZTehCeiIaf3Jvc4PvY4MuEwhiXXtuc8NzeSeXDxI/NPOykIMG
+            tLh9iwIXN0VMRvduS7q9e4mfSA0gGp5S/nl91SkTjm+zVbXYhSxpJ/ggwM9zKYbSv6jh4W
+            4QkYTUhWKWoZs0TlJG35yXFvTsnTv9fCoMu6hIwqB5DRac0otIfccPXrB9TPgHdy2Pkk65
+            z/2bLPlVG/Q14/nw6knC8bKz5pIkdCTuT+Nn1SCDubnCm92cvzbv4fztpZUrxu5qrrnsgA
+            IglnzYXNkNwEB+G4oQAAAQEA4WOjSZnCZ8Tz0lxYBe0rt5/K3n5wSEKEx9YSsMBLQsjrQ8
+            8ypKzu8RLZ47kLpjaupe7PTBuXuTsg0anq8k0aiksW7nqDKD/ib3DiCPXRrvI3d6aF4Q+O
+            Ljd0fzpwqdd9I9pJHqdSNKW40RuctUxDRNPuoY2mYxerJbagvP3DgcG/BOqD087X4iBwSz
+            yVC9kzk6QDy8rlVECQDkH3cHb6GvBRig4xcCHF6Tf7M5cF3EqU9XI5eMwkRnszubP7gmQz
+            Kz9A4AjYfnmERwl/rsziwofirHD4ADOfRfZlM67DdxIvnC0jJfq19SGksS8JLwWqlODyEY
+            iUaSuVwC+VPExxnwAAAQEA3rGSCXlNj1OfEVBBmYJ56Wt3PUOzwTmcVnO8kPds0hRcKxQg
+            gdoFhcT1fpgAb/oZl8Vs2J+bBoSzN/1ATk43M7caGVaoLu4a4t99/8Bsw4Wv1a2AYmEvg9
+            MfnM0IePDbS1mG5I0L6JE8N34X5WKDgavyn7CjgxHqI19KD6r/3InN5DXoGjR4h1Kl1lwv
+            6ZaNxBBGW9nOkHU6NbsPVJgBscngA0ofa8J9GYQ/YnLeIVuZ/kRP5JjC6MXirUMvVGhdr+
+            IG2djG0mX/2+arXctFK5vzBiwQc7hBy5cjInuXsEu0wL9yVjuifXRQcZX4bW3WsFwvBZDT
+            A05qQ7eW5PXiyQAAABd2aWVyeWNhbGxpcGVyQGdtYWlsLmNvbQEC
+            -----END OPENSSH PRIVATE KEY-----
           script: |
             # === 1. Go to app directory ===
             cd /root/pact-website || exit 1
