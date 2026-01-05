@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 function RegisterPage() {
   return (
@@ -13,9 +14,12 @@ function RegisterPage() {
             <p className="text-gray-600 mb-4">
               Sorry, self-registration is not allowed for security reasons.
             </p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 mb-6">
               Please contact the admin to get access to the system.
             </p>
+            <Button asChild variant="outline">
+              <a href="/admin/login">Back to Login</a>
+            </Button>
           </CardContent>
         </Card>
       </div>
