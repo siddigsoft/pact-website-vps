@@ -146,18 +146,18 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4 sm:mb-6">Services</h4>
             <ul className="space-y-2 sm:space-y-3 text-sm">
-              <li><FooterLink to="/service/2">Poverty Reduction & MSME Development</FooterLink></li>
-              <li><FooterLink to="/service/4">Monitoring, Evaluation & Learning</FooterLink></li>
-              <li><FooterLink to="/service/3">Capacity Building, Mentoring & Training</FooterLink></li>
-              <li><FooterLink to="/service/5">Program Design & Implementation</FooterLink></li>
-              <li><FooterLink to="/service/6">Strategy & Business Development</FooterLink></li>
-              <li><FooterLink to="/service/7">Macro-economic & Social Studies</FooterLink></li>
-              <li><FooterLink to="/service/8">Technology Consulting</FooterLink></li>
-              <li><FooterLink to="/service/9">Health & Social Development</FooterLink></li>
-              <li><FooterLink to="/service/10">Agricultural Services</FooterLink></li>
-              <li><FooterLink to="/service/11">Education & Capacity Development</FooterLink></li>
-              <li><FooterLink to="/service/12">Peacebuilding & Conflict Resolution</FooterLink></li>
-              <li><FooterLink to="/service/13">Data Acquisition & Knowledge Management</FooterLink></li>
+              <li><FooterLink to="/service/4">Poverty Reduction & MSME Development</FooterLink></li>
+              <li><FooterLink to="/service/6">Monitoring, Evaluation & Learning</FooterLink></li>
+              <li><FooterLink to="/service/5">Capacity Building, Mentoring & Training</FooterLink></li>
+              <li><FooterLink to="/service/20">Program Design & Implementation</FooterLink></li>
+              <li><FooterLink to="/service/14">Strategy & Business Development</FooterLink></li>
+              <li><FooterLink to="/service/9">Macro-economic & Social Studies</FooterLink></li>
+              <li><FooterLink to="/service/10">Technology Consulting</FooterLink></li>
+              <li><FooterLink to="/service/11">Health & Social Development</FooterLink></li>
+              <li><FooterLink to="/service/12">Agricultural Services</FooterLink></li>
+              <li><FooterLink to="/service/13">Education & Capacity Development</FooterLink></li>
+              <li><FooterLink to="/service/17">Peacebuilding & Conflict Resolution</FooterLink></li>
+              <li><FooterLink to="/service/15">Data Acquisition & Knowledge Management</FooterLink></li>
             </ul>
           </div>
           
