@@ -7,6 +7,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (token: string, user: any) => void;
   logout: () => void;
+  isLoggingIn: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -14,6 +15,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<any | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [, navigate] = useLocation();
 
   // Initialize auth state from localStorage on mount
@@ -34,22 +36,30 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, []);
 
+  // Handle navigation after login state updates
+  useEffect(() => {
+    if (isLoggingIn && token && user) {
+      setIsLoggingIn(false);
+      
+      // Check if there's a redirect path stored
+      const redirectPath = localStorage.getItem('auth-redirect');
+      if (redirectPath) {
+        localStorage.removeItem('auth-redirect');
+        navigate(redirectPath);
+      } else {
+        navigate('/admin/dashboard');
+      }
+    }
+  }, [isLoggingIn, token, user, navigate]);
+
   const login = (newToken: string, newUser: any) => {
+    setIsLoggingIn(true);
     setToken(newToken);
     setUser(newUser);
     
     // Save to localStorage
     localStorage.setItem('cms-jwt', newToken);
     localStorage.setItem('cms-user', JSON.stringify(newUser));
-    
-    // Check if there's a redirect path stored
-    const redirectPath = localStorage.getItem('auth-redirect');
-    if (redirectPath) {
-      localStorage.removeItem('auth-redirect');
-      navigate(redirectPath);
-    } else {
-      navigate('/admin/dashboard');
-    }
   };
 
   const logout = () => {
@@ -71,7 +81,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         user,
         isAuthenticated: !!token,
         login,
-        logout
+        logout,
+        isLoggingIn
       }}
     >
       {children}
