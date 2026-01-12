@@ -5,9 +5,9 @@ interface AuthContextType {
   token: string | null;
   user: any | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (token: string, user: any) => void;
   logout: () => void;
-  isLoggingIn: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -15,7 +15,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<any | null>(null);
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [, navigate] = useLocation();
 
   // Initialize auth state from localStorage on mount
@@ -34,14 +34,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         console.error('Error parsing user data:', error);
       }
     }
+    
+    setIsLoading(false);
   }, []);
 
-  // Handle navigation after login state updates
-  useEffect(() => {
-    if (isLoggingIn && token && user) {
-      setIsLoggingIn(false);
-      
-      // Check if there's a redirect path stored
+  const login = (newToken: string, newUser: any) => {
+    setToken(newToken);
+    setUser(newUser);
+    
+    // Save to localStorage
+    localStorage.setItem('cms-jwt', newToken);
+    localStorage.setItem('cms-user', JSON.stringify(newUser));
+    
+    // Navigate after state has been updated
+    setTimeout(() => {
       const redirectPath = localStorage.getItem('auth-redirect');
       if (redirectPath) {
         localStorage.removeItem('auth-redirect');
@@ -49,17 +55,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       } else {
         navigate('/admin/dashboard');
       }
-    }
-  }, [isLoggingIn, token, user, navigate]);
-
-  const login = (newToken: string, newUser: any) => {
-    setIsLoggingIn(true);
-    setToken(newToken);
-    setUser(newUser);
-    
-    // Save to localStorage
-    localStorage.setItem('cms-jwt', newToken);
-    localStorage.setItem('cms-user', JSON.stringify(newUser));
+    }, 0);
   };
 
   const logout = () => {
@@ -80,9 +76,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         token,
         user,
         isAuthenticated: !!token,
+        isLoading,
         login,
-        logout,
-        isLoggingIn
+        logout
       }}
     >
       {children}

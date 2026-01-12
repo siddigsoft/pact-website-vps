@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Switch, Route, useLocation } from "wouter";
+import { Switch, Route, useLocation, useRoute } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -9,7 +9,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { ProjectsProvider } from "@/context/ProjectsContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { smoothScrollToTop } from "@/lib/smoothScroll";
 
 // Public Pages
@@ -111,38 +111,51 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
 }
 
 function AdminRouter() {
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
+  const { isAuthenticated } = useAuth();
   
-  // If we're on the login page or register page, don't show the admin layout
-  if (location === '/admin' || location === '/admin/login' || location === '/admin/register') {
-    if (location === '/admin' || location === '/admin/login') {
-      return <AdminLoginPage />;
-    } else {
-      return <RegisterPage />;
+  // Handle redirects for /admin and /admin/
+  useEffect(() => {
+    if (location === '/admin' || location === '/admin/') {
+      if (isAuthenticated) {
+        navigate('/admin/dashboard', { replace: true });
+      } else {
+        navigate('/admin/login', { replace: true });
+      }
     }
+  }, [location, isAuthenticated, navigate]);
+  
+  // If we're on the login page, show login
+  if (location === '/admin/login') {
+    return <AdminLoginPage />;
   }
-
-  // For all other admin routes, wrap with AdminLayout and ProtectedRoute
+  
+  // If we're on the register page, show register
+  if (location === '/admin/register') {
+    return <RegisterPage />;
+  }
+  
+  // For all other admin routes, wrap with ProtectedRoute and AdminLayout
   return (
     <ProtectedRoute>
-    <AdminLayout>
-      <Switch>
-        <Route path="/admin/dashboard" component={DashboardPage} />
-        <Route path="/admin/content/hero-slides" component={HeroSlidesPage} />
-        <Route path="/admin/content/about" component={AdminAboutPage} />
-        <Route path="/admin/content/impact" component={ImpactStatsPage} />
-        <Route path="/admin/content/team" component={AdminTeamPage} />
-        <Route path="/admin/content/expertise" component={AdminExpertisePage} />
-        <Route path="/admin/content/services" component={AdminServicesPage} />
-        <Route path="/admin/content/clients" component={AdminClientsPage} />
-        <Route path="/admin/content/projects" component={AdminProjectsPage} />
-        <Route path="/admin/content/blog" component={BlogPage} />
-        <Route path="/admin/content/footer" component={FooterSettingsPage} />
-        <Route path="/admin/messages" component={ContactMessagesPage} />
-        <Route path="/admin/locations" component={AdminLocationsPage} />
-        <Route component={NotFound} />
-      </Switch>
-    </AdminLayout>
+      <AdminLayout>
+        <Switch>
+          <Route path="/admin/dashboard" component={DashboardPage} />
+          <Route path="/admin/content/hero-slides" component={HeroSlidesPage} />
+          <Route path="/admin/content/about" component={AdminAboutPage} />
+          <Route path="/admin/content/impact" component={ImpactStatsPage} />
+          <Route path="/admin/content/team" component={AdminTeamPage} />
+          <Route path="/admin/content/expertise" component={AdminExpertisePage} />
+          <Route path="/admin/content/services" component={AdminServicesPage} />
+          <Route path="/admin/content/clients" component={AdminClientsPage} />
+          <Route path="/admin/content/projects" component={AdminProjectsPage} />
+          <Route path="/admin/content/blog" component={BlogPage} />
+          <Route path="/admin/content/footer" component={FooterSettingsPage} />
+          <Route path="/admin/messages" component={ContactMessagesPage} />
+          <Route path="/admin/locations" component={AdminLocationsPage} />
+          <Route component={NotFound} />
+        </Switch>
+      </AdminLayout>
     </ProtectedRoute>
   );
 }
@@ -153,8 +166,13 @@ function Router() {
   // Check if we're on an admin route
   const isAdminRoute = location.startsWith('/admin');
   
-  // Separate routers for admin and public
-  return isAdminRoute ? <AdminRouter /> : <PublicRouter />;
+  // For admin routes, always show AdminRouter
+  if (isAdminRoute) {
+    return <AdminRouter />;
+  }
+  
+  // For public routes, show PublicRouter
+  return <PublicRouter />;
 }
 
 function App() {

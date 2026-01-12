@@ -124,7 +124,7 @@ const HeroSlider = () => {
   // If loading and no slides yet, show skeleton
   if (loading && slides.length === 0) {
     return (
-      <section id="home" className="relative overflow-hidden bg-gradient-to-r from-navy-900 to-navy-800 h-[60vh] md:h-[70vh]">
+      <section id="home" className="relative overflow-hidden bg-gradient-to-r from-navy-900 to-navy-800 h-[60vh] md:h-[70vh] lg:h-[75vh]">
         <div className="absolute inset-0 bg-black/20 animate-pulse" />
         <div className="relative h-full flex items-center justify-center">
           <div className="container mx-auto px-4 md:px-8 text-center space-y-6">
@@ -141,7 +141,7 @@ const HeroSlider = () => {
   // If no slides are available after loading, show a message
   if (!loading && slides.length === 0) {
     return (
-      <section id="home" className="relative overflow-hidden bg-dark text-white h-[60vh] md:h-[70vh] flex items-center justify-center">
+      <section id="home" className="relative overflow-hidden bg-dark text-white h-[60vh] md:h-[70vh] lg:h-[75vh] flex items-center justify-center">
         <div className="text-center p-8">
           <h1 className="text-2xl md:text-3xl font-bold mb-4">
             {error ? "Failed to load hero slides" : "No hero slides available"}
@@ -168,7 +168,7 @@ const HeroSlider = () => {
       </div>
 
       {/* Embla Carousel Container */}
-      <div className="embla h-[60vh] md:h-[70vh] overflow-hidden" ref={emblaRef}>
+      <div className="embla h-[60vh] md:h-[70vh] lg:h-[75vh] overflow-hidden" ref={emblaRef}>
         <div className="embla__container flex h-full">
           {slides.map((slide) => (
             <div key={slide.id} className="embla__slide relative min-w-full h-full flex">
@@ -218,10 +218,10 @@ const HeroSlider = () => {
               </div>
 
               {/* Slide Background (Right Side) */}
-              <div className="absolute inset-0 z-0">
+              <div className="absolute inset-0 z-0 bg-gradient-to-br from-navy-900 to-navy-800">
                 {slide.videoBackground ? (
                   <video
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-center"
                     autoPlay
                     muted
                     loop
@@ -234,17 +234,11 @@ const HeroSlider = () => {
                   <img 
                     src={slide.backgroundImage} 
                     alt={`Slide ${slide.id}`} 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-center"
                   />
                 )}
-                {/* Remove or adjust overlay if necessary */}
-                {/* <div className="absolute inset-0 bg-primary/75"></div> */}
-                {/* <div 
-                  className="absolute left-0 top-0 bottom-0 w-1/3 lg:w-1/4"
-                  style={{ 
-                    background: `linear-gradient(90deg, ${slide.accentColor || '#FF8200'}40 0%, transparent 100%)` 
-                  }}
-                ></div> */}
+                {/* Overlay for better text readability */}
+                <div className="absolute inset-0 bg-black/30"></div>
               </div>
             </div>
           ))}
