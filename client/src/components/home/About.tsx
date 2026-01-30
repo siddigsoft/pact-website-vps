@@ -29,25 +29,25 @@ interface AboutContent {
   }[];
 }
 
-const FeatureItem = ({ 
-  icon, 
-  title, 
+const FeatureItem = ({
+  icon,
+  title,
   description,
   index
-}: { 
-  icon: React.ReactNode, 
-  title: string, 
+}: {
+  icon: React.ReactNode,
+  title: string,
   description: string,
   index: number
 }) => {
   return (
-    <div 
+    <div
       className="flex items-start p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300"
-      data-aos="fade-up" 
+      data-aos="fade-up"
       data-aos-delay={100 + (index * 100)}
     >
       <div className="p-3 rounded-full bg-primary/10 text-primary mr-4 mt-1 flex-shrink-0">
-          {icon}
+        {icon}
       </div>
       <div>
         <h4 className="text-lg font-semibold text-navy-800 mb-2">{title}</h4>
@@ -75,9 +75,9 @@ const About = () => {
   const defaultMission = "To empower communities socially and economically.";
   const defaultCoreValues = [
     "Expertise",
-    "Integrity", 
-    "Excellence", 
-    "Sustainable Transformation & Empowerment", 
+    "Integrity",
+    "Excellence",
+    "Sustainable Transformation & Empowerment",
     "Respect"
   ];
 
@@ -90,13 +90,13 @@ const About = () => {
             'Cache-Control': 'no-cache'
           }
         });
-        
+
         if (!response.ok) {
           throw new Error(`API response error: ${response.status} ${response.statusText}`);
         }
-        
+
         const data = await response.json();
-        
+
         if (data.success && data.data) {
           // Ensure we have vision, mission, and core_values by providing defaults if missing
           const processedData = {
@@ -225,7 +225,7 @@ const About = () => {
           <h3 className="text-primary uppercase tracking-wide text-sm font-semibold mb-2">{content.subtitle}</h3>
           <h2 className="text-4xl font-bold text-navy-900 mb-4">
             About <span className="text-primary">PACT</span> Consultancy
-            </h2>
+          </h2>
           <div className="w-24 h-1 bg-primary mx-auto"></div>
         </div>
 
@@ -248,10 +248,10 @@ const About = () => {
               {/* Features - Show only 2 features */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6 flex-grow">
                 {content.features && content.features.slice(0, 2).map((feature, index) => (
-                  <div 
+                  <div
                     key={index}
                     className="flex items-start p-3 sm:p-4 bg-slate-50 rounded-lg border border-slate-200 hover:border-primary/30 transition-all duration-500 hover:shadow-md hover:-translate-y-1"
-                    data-aos="fade-up" 
+                    data-aos="fade-up"
                     data-aos-delay={100 + (index * 100)}
                   >
                     <div className="p-1.5 sm:p-2 rounded-full bg-primary/10 text-primary mr-2 sm:mr-3 mt-1 flex-shrink-0 transition-transform duration-500 hover:scale-110 hover:rotate-6">
@@ -264,7 +264,7 @@ const About = () => {
                   </div>
                 ))}
               </div>
-            
+
               {/* More Details Button with Dialog */}
               <div className="mt-auto pt-3 sm:pt-4 border-t border-slate-200">
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -284,7 +284,7 @@ const About = () => {
                         {content.subtitle}
                       </DialogDescription>
                     </DialogHeader>
-                  
+
                     {/* Scrollable Content with smooth scrolling */}
                     <div className="overflow-y-auto flex-1 pr-1 sm:pr-2 scroll-smooth">
                       <div className="space-y-4 sm:space-y-6 py-2">
@@ -303,7 +303,7 @@ const About = () => {
                             <h3 className="text-lg sm:text-xl font-semibold text-navy-800 mb-3 sm:mb-4">Our Strengths</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                               {content.features.map((feature, index) => (
-                                <div 
+                                <div
                                   key={index}
                                   className="flex items-start p-3 sm:p-4 bg-slate-50 rounded-lg border border-slate-200 hover:border-primary/30 transition-all duration-500 hover:shadow-md opacity-0 animate-fade-up"
                                   style={{ animationDelay: `${(paragraphs.length * 100) + (index * 80)}ms`, animationFillMode: 'forwards' }}
@@ -324,9 +324,9 @@ const About = () => {
                         {/* Image if available */}
                         {content.image && (
                           <div className="mt-8 mb-4">
-                            <img 
-                              src={content.image} 
-                              alt="About PACT Consultancy" 
+                            <img
+                              src={content.image}
+                              alt="About PACT Consultancy"
                               className="w-full h-auto max-h-[400px] rounded-lg shadow-lg object-cover"
                             />
                           </div>
@@ -337,7 +337,7 @@ const About = () => {
                 </Dialog>
               </div>
             </div>
-                </div>
+          </div>
 
           {/* Right Column - Vision, Mission, Values */}
           <div className="lg:col-span-5">
@@ -369,7 +369,7 @@ const About = () => {
               </div>
 
               {/* Core Values */}
-                <div>
+              <div>
                 <div className="flex items-center mb-2 sm:mb-3 md:mb-4">
                   <Award className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary mr-2 sm:mr-3 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
                   <h4 className="text-base sm:text-lg md:text-xl font-semibold text-navy-800 pb-1 border-b-2 border-primary">
@@ -378,13 +378,13 @@ const About = () => {
                 </div>
                 <div className="space-y-1.5 sm:space-y-2 pl-2 sm:pl-3">
                   {(content.core_values || defaultCoreValues).map((value, index) => (
-                    <div 
+                    <div
                       key={index}
                       className="flex items-center p-2 sm:p-2.5 bg-slate-50 border-l-4 border-primary rounded-r text-gray-700 hover:bg-primary/5 hover:border-primary/80 transition-all duration-500 hover:translate-x-2 hover:shadow-sm"
                     >
                       <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 text-primary mr-2 sm:mr-3 flex-shrink-0 transition-transform duration-500 group-hover:translate-x-1" />
                       <span className="text-xs sm:text-sm md:text-base">{value}</span>
-              </div>
+                    </div>
                   ))}
                 </div>
               </div>

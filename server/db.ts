@@ -1,7 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
-import { config } from 'dotenv';
+import dotenv from 'dotenv';
 
-config();
+dotenv.config();
+
+console.log('SUPABASE_URL:', process.env.SUPABASE_URL);
+console.log('SUPABASE_ANON_KEY:', process.env.SUPABASE_ANON_KEY ? 'exists' : 'missing');
 
 // Initialize Supabase client
 const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;

@@ -13,9 +13,9 @@ const ServiceCard = ({ service }: { service: ServiceItem }) => {
     <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
       {/* Image Header with Badge */}
       <div className="relative h-48 sm:h-52">
-        <img 
-          src={service.image} 
-          alt={service.title} 
+        <img
+          src={service.image}
+          alt={service.title}
           className="w-full h-full object-cover"
           onError={(e) => {
             (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Service+Image';
@@ -30,7 +30,7 @@ const ServiceCard = ({ service }: { service: ServiceItem }) => {
 
       {/* Content */}
       <div className="p-4 sm:p-6">
-        
+
         {/* Title */}
         <h3 className="text-lg sm:text-2xl font-bold text-[#1B365D] mb-2 sm:mb-3">
           {service.title}
@@ -43,7 +43,7 @@ const ServiceCard = ({ service }: { service: ServiceItem }) => {
 
         {/* Action Links */}
         <div className="flex items-center justify-between pt-3 sm:pt-4 border-t border-gray-100">
-          <Link 
+          <Link
             href={`/services#${service.id}`}
             className="flex items-center text-[#FF6B35] hover:text-[#1B365D] transition-colors text-sm sm:text-base"
           >
@@ -66,7 +66,7 @@ const Services = () => {
       try {
         setLoading(true);
         const response = await fetchServices();
-        
+
         if (response.success && Array.isArray(response.data)) {
           setServices(response.data);
         } else {
@@ -120,11 +120,11 @@ const Services = () => {
             <span className="text-[#1B365D]">Services</span>
           </h2>
           <p className="text-gray-600 text-lg">
-          From project / program conception to implementation, assessment and evaluation, 
-          PACT delivers technical assistance that enables sustainable transformation and lasting impact
+            From project / program conception to implementation, assessment and evaluation,
+            PACT delivers technical assistance that enables sustainable transformation and lasting impact
           </p>
           <div className="mt-8">
-            <Link 
+            <Link
               href="/services"
               className="inline-flex items-center bg-[#1B365D] text-white px-6 py-3 rounded hover:bg-primary transition-colors"
             >
@@ -144,9 +144,9 @@ const Services = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {services.length > 0 ? (
             services.slice(0, 6).map((service) => (
-              <ServiceCard 
-                key={service.id} 
-                service={service} 
+              <ServiceCard
+                key={service.id}
+                service={service}
               />
             ))
           ) : (

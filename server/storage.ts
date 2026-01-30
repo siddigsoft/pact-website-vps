@@ -878,7 +878,16 @@ export class DatabaseStorage implements IStorage {
     const { data, error } = await supabase
       .from('hero_slides')
       .insert([{
-        ...slide,
+        title: slide.title,
+        subtitle: slide.subtitle,
+        description: slide.description,
+        action_text: slide.actionText,
+        action_link: slide.actionLink,
+        background_image: slide.backgroundImage,
+        category: slide.category,
+        video_background: slide.videoBackground,
+        accent_color: slide.accentColor,
+        order_index: slide.order_index,
         updated_at: new Date().toISOString()
       }])
       .select()
@@ -888,12 +897,24 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateHeroSlide(id: number, slide: Partial<InsertHeroSlide>): Promise<HeroSlide | undefined> {
+    const updateData: any = {
+      updated_at: new Date().toISOString()
+    };
+
+    if (slide.title !== undefined) updateData.title = slide.title;
+    if (slide.subtitle !== undefined) updateData.subtitle = slide.subtitle;
+    if (slide.description !== undefined) updateData.description = slide.description;
+    if (slide.actionText !== undefined) updateData.action_text = slide.actionText;
+    if (slide.actionLink !== undefined) updateData.action_link = slide.actionLink;
+    if (slide.backgroundImage !== undefined) updateData.background_image = slide.backgroundImage;
+    if (slide.category !== undefined) updateData.category = slide.category;
+    if (slide.videoBackground !== undefined) updateData.video_background = slide.videoBackground;
+    if (slide.accentColor !== undefined) updateData.accent_color = slide.accentColor;
+    if (slide.order_index !== undefined) updateData.order_index = slide.order_index;
+
     const { data, error } = await supabase
       .from('hero_slides')
-      .update({
-        ...slide,
-        updated_at: new Date().toISOString()
-      })
+      .update(updateData)
       .eq('id', id)
       .select()
       .single();

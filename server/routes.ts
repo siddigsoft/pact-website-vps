@@ -652,13 +652,16 @@ const createHeroSlide: AsyncMulterHandler = async (req, res, next) => {
     // Process file uploads if they exist
     if (req.files && typeof req.files === 'object') {
       if ('backgroundImage' in req.files && req.files['backgroundImage'].length > 0) {
+        console.log("Uploading background image...");
         const uploadResult = await uploadFileToSupabase(req.files['backgroundImage'][0], BUCKETS.HERO);
+        console.log("Upload result:", uploadResult);
         if (uploadResult) {
           processedBody.backgroundImage = uploadResult.url;
         }
       }
 
       if ('videoBackground' in req.files && req.files['videoBackground'].length > 0) {
+        console.log("Uploading video background...");
         const uploadResult = await uploadFileToSupabase(req.files['videoBackground'][0], BUCKETS.HERO);
         if (uploadResult) {
           processedBody.videoBackground = uploadResult.url;
@@ -666,17 +669,29 @@ const createHeroSlide: AsyncMulterHandler = async (req, res, next) => {
       }
     }
 
+    console.log("Validating body:", processedBody);
     // Validate input data
     const validatedData = insertHeroSlideSchema.parse(processedBody);
+    console.log("Validation successful");
 
     // Create a new hero slide
     const slide = await storage.createHeroSlide(validatedData);
+    console.log("Hero slide created:", slide);
 
     res.status(201).json({
       success: true,
       data: slide
     });
   } catch (error) {
+    console.error("Error creating hero slide:", error);
+    if (error instanceof z.ZodError) {
+      res.status(400).json({
+        success: false,
+        message: "Validation error",
+        errors: error.errors
+      });
+      return;
+    }
     next(error);
   }
 };
@@ -1943,6 +1958,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { title, description, organization, category, icon, duration, location, services, order_index } = req.body;
       let bg_image = req.body.bg_image;
 
+      console.log('PATCH /api/admin/content/project/:id called');
+      console.log('ID param:', id);
+      console.log('Request body:', req.body);
+      if (req.file) {
+        console.log('File uploaded:', req.file.originalname);
+      }
+
       // Handle file upload if present
       if (req.file) {
         const uploadResult = await uploadFileToSupabase(req.file, BUCKETS.PROJECTS);
@@ -1974,9 +1996,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (parsedServices !== undefined) projectData.services = parsedServices;
       if (order_index !== undefined) projectData.order_index = Number(order_index);
 
+      console.log('Update payload for storage.updateProjectContent:', projectData);
       const result = await storage.updateProjectContent(parseInt(id), projectData);
 
       if (!result) {
+        console.log('Project not found for update:', id);
         res.status(404).json({
           success: false,
           message: "Project content not found"
@@ -1984,12 +2008,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return;
       }
 
+      console.log('Project updated successfully:', result);
       res.json({
         success: true,
         message: "Project content updated successfully",
         data: result
       });
     } catch (error) {
+      console.error('Error in PATCH /api/admin/content/project/:id:', error);
       res.status(500).json({
         success: false,
         message: "Failed to update project content",

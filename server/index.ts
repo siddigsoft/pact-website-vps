@@ -5,13 +5,21 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { ensureUploadDirectories } from "./ensure-uploads";
-const express = (await import('express')).default;
-const cors = (await import('cors')).default;
+import dotenv from 'dotenv';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+dotenv.config();
+
+console.log('SUPABASE_URL:', process.env.SUPABASE_URL);
+console.log('SUPABASE_ANON_KEY:', process.env.SUPABASE_ANON_KEY ? 'exists' : 'missing');
+
 // Ensure all upload directories exist
 ensureUploadDirectories();
+
+const express = (await import('express')).default;
+const cors = (await import('cors')).default;
 
 const app: Express = express();
 

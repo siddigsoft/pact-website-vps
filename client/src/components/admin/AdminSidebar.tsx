@@ -1,10 +1,10 @@
 import { Link, useRoute } from 'wouter';
 import { useState } from 'react';
-import { 
+import {
   LayoutDashboard,
-  FileText, 
-  Award, 
-  Briefcase, 
+  FileText,
+  Award,
+  Briefcase,
   Users,
   FolderArchive,
   ListTodo,
@@ -20,6 +20,17 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import pactLogo from '@/assets/pact-logo.png';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface MenuItem {
   name: string;
@@ -106,12 +117,12 @@ const AdminSidebar = ({ isOpen, onToggle }: AdminSidebarProps) => {
     <>
       {/* Mobile overlay */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={onToggle}
         />
       )}
-      
+
       {/* Sidebar */}
       <div className={`
         fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-50 transition-transform duration-300 ease-in-out flex flex-col
@@ -140,12 +151,11 @@ const AdminSidebar = ({ isOpen, onToggle }: AdminSidebarProps) => {
                 const [isActive] = useRoute(item.path);
                 return (
                   <Link href={item.path}>
-                    <div 
-                      className={`flex items-center py-2 px-3 rounded-md transition-colors cursor-pointer ${
-                        isActive 
-                          ? 'bg-primary text-white hover:bg-primary-dark' 
-                          : 'text-gray-700 hover:bg-gray-100 hover:text-primary'
-                      }`}
+                    <div
+                      className={`flex items-center py-2 px-3 rounded-md transition-colors cursor-pointer ${isActive
+                        ? 'bg-primary text-white hover:bg-primary-dark'
+                        : 'text-gray-700 hover:bg-gray-100 hover:text-primary'
+                        }`}
                       onClick={() => {
                         // Close mobile menu when item is clicked
                         if (window.innerWidth < 1024) {
@@ -159,7 +169,7 @@ const AdminSidebar = ({ isOpen, onToggle }: AdminSidebarProps) => {
                   </Link>
                 );
               };
-              
+
               return (
                 <li key={item.path}>
                   <ActiveLink />
@@ -168,23 +178,34 @@ const AdminSidebar = ({ isOpen, onToggle }: AdminSidebarProps) => {
             })}
           </ul>
         </nav>
-        
+
         {/* Logout section - Fixed at bottom */}
         <div className="p-4 border-t border-gray-200">
           <div className="px-3 py-2 text-sm text-gray-600 mb-2">
             User Name: <span className="font-medium">{user?.username || 'Admin'}</span>
           </div>
-          <button
-            onClick={() => {
-              if (confirm('Are you sure you want to logout?')) {
-                logout();
-              }
-            }}
-            className="flex items-center w-full py-2 px-3 rounded-md text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors"
-          >
-            <LogOut className="w-5 h-5 mr-2" />
-            <span>Logout</span>
-          </button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button
+                className="flex items-center w-full py-2 px-3 rounded-md text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors"
+              >
+                <LogOut className="w-5 h-5 mr-2" />
+                <span>Logout</span>
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  You will be returned to the login screen.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => logout()}>Logout</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     </>

@@ -20,8 +20,8 @@ interface SlideContent {
 
 const HeroSlider = () => {
   // Initialize Embla Carousel with smoother transitions
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    loop: true, 
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
     duration: 35, // Slower, more professional transition
     skipSnaps: false,
   });
@@ -40,7 +40,7 @@ const HeroSlider = () => {
         setLoading(true);
         const response = await fetch('/api/hero-slides');
         const data = await response.json();
-        
+
         if (data.success && data.data && data.data.length > 0) {
           // Map API response fields (snake_case) to component interface (camelCase)
           const mappedSlides = data.data.map((slide: any) => ({
@@ -54,9 +54,9 @@ const HeroSlider = () => {
             category: slide.category,
             order_index: slide.order_index
           }));
-          
+
           // Sort slides by order_index
-          const sortedSlides = [...mappedSlides].sort((a, b) => 
+          const sortedSlides = [...mappedSlides].sort((a, b) =>
             (a.order_index || 0) - (b.order_index || 0)
           );
           setSlides(sortedSlides);
@@ -158,10 +158,10 @@ const HeroSlider = () => {
     <section id="home" className="relative overflow-hidden bg-dark text-white">
       {/* BearingPoint style progress bar */}
       <div className="absolute top-0 left-0 right-0 z-30 h-1 bg-white/20">
-        <div 
+        <div
           className="h-full bg-accent transition-all duration-[9000ms] ease-linear"
-          style={{ 
-            width: `${slideProgress}%`, 
+          style={{
+            width: `${slideProgress}%`,
             backgroundColor: currentSlide?.accentColor || '#FF8200'
           }}
         ></div>
@@ -231,9 +231,9 @@ const HeroSlider = () => {
                     Your browser does not support the video tag.
                   </video>
                 ) : (
-                  <img 
-                    src={slide.backgroundImage} 
-                    alt={`Slide ${slide.id}`} 
+                  <img
+                    src={slide.backgroundImage}
+                    alt={`Slide ${slide.id}`}
                     className="w-full h-full object-cover object-center"
                   />
                 )}
@@ -254,17 +254,17 @@ const HeroSlider = () => {
 
       {/* Navigation Buttons - Positioned at extreme ends on mobile, bottom-right on desktop */}
       {/* Previous Button - Left Side */}
-      <button 
-        onClick={scrollPrev} 
+      <button
+        onClick={scrollPrev}
         className="absolute bottom-4 left-4 md:bottom-8 md:left-auto md:right-20 z-20 bg-white/10 hover:bg-white/20 text-white p-2 md:p-2.5 transition-all duration-300 hover:scale-110 backdrop-blur-sm"
         aria-label="Previous slide"
       >
         <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
       </button>
-      
+
       {/* Next Button - Right Side */}
-      <button 
-        onClick={scrollNext} 
+      <button
+        onClick={scrollNext}
         className="absolute bottom-4 right-4 md:bottom-8 md:right-8 z-20 bg-white/10 hover:bg-white/20 text-white p-2 md:p-2.5 transition-all duration-300 hover:scale-110 backdrop-blur-sm"
         aria-label="Next slide"
       >
@@ -278,8 +278,8 @@ const HeroSlider = () => {
             key={index}
             className="h-1 transition-all duration-300 flex-grow"
             style={{
-              backgroundColor: index === selectedIndex 
-                ? (currentSlide?.accentColor || '#FF8200') 
+              backgroundColor: index === selectedIndex
+                ? (currentSlide?.accentColor || '#FF8200')
                 : 'rgba(255, 255, 255, 0.3)'
             }}
             onClick={() => scrollTo(index)}
