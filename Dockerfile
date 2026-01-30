@@ -43,4 +43,4 @@ ENV PORT=5000
 # Run as non-root user for security
 USER node
 
-CMD ["node", "--max-old-space-size=768", "dist/index.js"]
+CMD ["node", "dist/index.js"]
