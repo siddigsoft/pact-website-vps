@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import CountUp from 'react-countup';
 import { useScrollEffect } from '@/hooks/useScrollEffect';
-import { Award, Globe, Users, Handshake, CheckCircle, Calendar, Briefcase, Target, ArrowRight, X } from 'lucide-react';
+import { Award, Globe, Users, Handshake, CheckCircle, Calendar, Briefcase, Target, ArrowRight, X, Lightbulb, Shield, TrendingUp, Heart, Sparkles } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -229,53 +229,48 @@ const About = () => {
           <div className="w-24 h-1 bg-primary mx-auto"></div>
         </div>
 
-        {/* Main Content Section - Grid with equal heights */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
-          {/* Left Column - Description */}
-          <div className="lg:col-span-7 flex flex-col h-full">
-            {/* Card wrapper for left content */}
-            <div className="bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-md h-full flex flex-col transition-all duration-500 hover:shadow-xl">
-              {/* Description Text - Show only first paragraph */}
-              <div className="mb-4 sm:mb-6">
-                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-navy-900 mb-3 sm:mb-4">
-                  Who We Are
-                </h3>
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                  {previewText}
-                </p>
-              </div>
+        {/* Main Content Section - Redesigned Layout */}
+        <div className="space-y-8">
+          {/* Top Section: Who We Are (Left) + Vision & Mission (Right) */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left: Who We Are Section */}
+            <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md transition-all duration-500 hover:shadow-xl flex flex-col h-full">
+              <h3 className="text-2xl sm:text-3xl font-bold text-navy-900 mb-4 flex items-center">
+                <Users className="h-6 w-6 sm:h-7 sm:w-7 text-primary mr-3" />
+                Who We Are
+              </h3>
+              <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-6 flex-grow">
+                {previewText}
+              </p>
 
-              {/* Features - Show only 2 features */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6 flex-grow">
-                {content.features && content.features.slice(0, 2).map((feature, index) => (
+              {/* Features Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                {content.features && content.features.map((feature, index) => (
                   <div
                     key={index}
-                    className="flex items-start p-3 sm:p-4 bg-slate-50 rounded-lg border border-slate-200 hover:border-primary/30 transition-all duration-500 hover:shadow-md hover:-translate-y-1"
+                    className="flex flex-col items-center text-center p-4 bg-slate-50 rounded-lg border border-slate-200 hover:border-primary/50 transition-all duration-500 hover:shadow-md hover:-translate-y-1"
                     data-aos="fade-up"
                     data-aos-delay={100 + (index * 100)}
                   >
-                    <div className="p-1.5 sm:p-2 rounded-full bg-primary/10 text-primary mr-2 sm:mr-3 mt-1 flex-shrink-0 transition-transform duration-500 hover:scale-110 hover:rotate-6">
-                      {featureIcons[feature.icon as keyof typeof featureIcons] || <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4" />}
+                    <div className="p-3 rounded-full bg-primary/10 text-primary mb-3 transition-transform duration-500 hover:scale-110 hover:rotate-6">
+                      {featureIcons[feature.icon as keyof typeof featureIcons] || <CheckCircle className="h-5 w-5" />}
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-navy-800 mb-1 text-sm sm:text-base">{feature.title}</h4>
-                      <p className="text-xs sm:text-sm text-gray-600">{feature.description}</p>
-                    </div>
+                    <h4 className="font-semibold text-navy-800 mb-2 text-sm sm:text-base">{feature.title}</h4>
+                    <p className="text-xs sm:text-sm text-gray-600">{feature.description}</p>
                   </div>
                 ))}
               </div>
 
-              {/* More Details Button with Dialog */}
-              <div className="mt-auto pt-3 sm:pt-4 border-t border-slate-200">
+              {/* More Details Button */}
+              <div className="mt-auto flex justify-center">
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
-                    <button className="w-full inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-500 shadow-md hover:shadow-lg group hover:scale-[1.02] text-sm sm:text-base min-h-[44px]">
-                      More Details
-                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-2 transition-transform duration-500" />
+                    <button className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-500 shadow-md hover:shadow-lg group hover:scale-105">
+                      Learn More About Us
+                      <ArrowRight className="h-5 w-5 group-hover:translate-x-2 transition-transform duration-500" />
                     </button>
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl w-[95vw] sm:w-[90vw] md:w-full max-h-[90vh] sm:max-h-[85vh] overflow-hidden flex flex-col duration-600 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-100 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] [&>button]:z-50 [&>button]:w-8 [&>button]:h-8 sm:[&>button]:w-10 sm:[&>button]:h-10 [&>button]:bg-gray-100 [&>button]:hover:bg-gray-200 [&>button]:hover:scale-110 [&>button]:rounded-md [&>button]:right-4 sm:[&>button]:right-6 [&>button]:top-4 sm:[&>button]:top-4 [&>button]:flex [&>button]:items-center [&>button]:justify-center [&>button>svg]:w-5 [&>button>svg]:h-5 sm:[&>button>svg]:w-6 sm:[&>button>svg]:h-6 [&>button>svg]:stroke-[3] [&>button]:transition-all [&>button]:duration-500">
-                    {/* Fixed Header */}
                     <DialogHeader className="pb-3 sm:pb-4 border-b sticky top-0 bg-white z-40 transition-all duration-500">
                       <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-navy-900 mb-2 pr-10 sm:pr-12">
                         About <span className="text-primary">PACT</span> Consultancy
@@ -285,10 +280,8 @@ const About = () => {
                       </DialogDescription>
                     </DialogHeader>
 
-                    {/* Scrollable Content with smooth scrolling */}
                     <div className="overflow-y-auto flex-1 pr-1 sm:pr-2 scroll-smooth">
                       <div className="space-y-4 sm:space-y-6 py-2">
-                        {/* Full Description */}
                         <div className="space-y-3 sm:space-y-4">
                           {paragraphs.map((paragraph, index) => (
                             <p key={index} className="text-gray-700 leading-relaxed text-sm sm:text-base opacity-0 animate-fade-in" style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'forwards' }}>
@@ -297,7 +290,6 @@ const About = () => {
                           ))}
                         </div>
 
-                        {/* All Features */}
                         {content.features && content.features.length > 0 && (
                           <div className="mt-6 sm:mt-8">
                             <h3 className="text-lg sm:text-xl font-semibold text-navy-800 mb-3 sm:mb-4">Our Strengths</h3>
@@ -321,7 +313,6 @@ const About = () => {
                           </div>
                         )}
 
-                        {/* Image if available */}
                         {content.image && (
                           <div className="mt-8 mb-4">
                             <img
@@ -337,57 +328,113 @@ const About = () => {
                 </Dialog>
               </div>
             </div>
-          </div>
 
-          {/* Right Column - Vision, Mission, Values */}
-          <div className="lg:col-span-5">
-            <div className="bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-md w-full h-full flex flex-col justify-between transition-all duration-500 hover:shadow-xl">
+            {/* Right: Vision and Mission Stacked */}
+            <div className="flex flex-col gap-6 h-full">
               {/* Vision */}
-              <div className="mb-4 sm:mb-6 md:mb-8">
-                <div className="flex items-center mb-2 sm:mb-3 md:mb-4">
-                  <Target className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary mr-2 sm:mr-3 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
-                  <h4 className="text-base sm:text-lg md:text-xl font-semibold text-navy-800 pb-1 border-b-2 border-primary">
-                    Vision / Core Purpose
+              <div className="bg-gradient-to-br from-primary/5 to-white p-6 sm:p-8 rounded-lg shadow-md border-l-4 border-primary transition-all duration-500 hover:shadow-xl hover:border-primary/80 flex-1 flex flex-col">
+                <div className="flex items-center mb-4">
+                  <div className="p-3 rounded-full bg-primary/10 text-primary mr-4">
+                    <Target className="h-6 w-6 sm:h-7 sm:w-7" />
+                  </div>
+                  <h4 className="text-xl sm:text-2xl font-bold text-navy-800">
+                    Vision
                   </h4>
                 </div>
-                <p className="italic text-gray-700 pl-6 sm:pl-8 md:pl-9 border-l-2 border-primary/30 py-2 text-xs sm:text-sm md:text-base transition-colors duration-500 hover:border-primary">
+                <p className="text-gray-700 leading-relaxed text-sm sm:text-base italic flex-grow">
                   {content.vision || defaultVision}
                 </p>
               </div>
 
               {/* Mission */}
-              <div className="mb-4 sm:mb-6 md:mb-8">
-                <div className="flex items-center mb-2 sm:mb-3 md:mb-4">
-                  <Globe className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary mr-2 sm:mr-3 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
-                  <h4 className="text-base sm:text-lg md:text-xl font-semibold text-navy-800 pb-1 border-b-2 border-primary">
+              <div className="bg-gradient-to-br from-primary/5 to-white p-6 sm:p-8 rounded-lg shadow-md border-l-4 border-primary transition-all duration-500 hover:shadow-xl hover:border-primary/80 flex-1 flex flex-col">
+                <div className="flex items-center mb-4">
+                  <div className="p-3 rounded-full bg-primary/10 text-primary mr-4">
+                    <Globe className="h-6 w-6 sm:h-7 sm:w-7" />
+                  </div>
+                  <h4 className="text-xl sm:text-2xl font-bold text-navy-800">
                     Mission
                   </h4>
                 </div>
-                <p className="italic text-gray-700 pl-6 sm:pl-8 md:pl-9 border-l-2 border-primary/30 py-2 text-xs sm:text-sm md:text-base transition-colors duration-500 hover:border-primary">
+                <p className="text-gray-700 leading-relaxed text-sm sm:text-base italic flex-grow">
                   {content.mission || defaultMission}
                 </p>
               </div>
+            </div>
+          </div>
 
-              {/* Core Values */}
-              <div>
-                <div className="flex items-center mb-2 sm:mb-3 md:mb-4">
-                  <Award className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary mr-2 sm:mr-3 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
-                  <h4 className="text-base sm:text-lg md:text-xl font-semibold text-navy-800 pb-1 border-b-2 border-primary">
-                    Core Values
-                  </h4>
-                </div>
-                <div className="space-y-1.5 sm:space-y-2 pl-2 sm:pl-3">
-                  {(content.core_values || defaultCoreValues).map((value, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center p-2 sm:p-2.5 bg-slate-50 border-l-4 border-primary rounded-r text-gray-700 hover:bg-primary/5 hover:border-primary/80 transition-all duration-500 hover:translate-x-2 hover:shadow-sm"
-                    >
-                      <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 text-primary mr-2 sm:mr-3 flex-shrink-0 transition-transform duration-500 group-hover:translate-x-1" />
-                      <span className="text-xs sm:text-sm md:text-base">{value}</span>
-                    </div>
-                  ))}
-                </div>
+          {/* Core Values - Professional Single Row */}
+          <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md transition-all duration-500 hover:shadow-xl">
+            <div className="flex items-center justify-center mb-6">
+              <div className="p-3 rounded-full bg-primary/10 text-primary mr-4">
+                <Award className="h-6 w-6 sm:h-7 sm:w-7" />
               </div>
+              <h4 className="text-2xl sm:text-3xl font-bold text-navy-800">
+                Our Core Values
+              </h4>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+              {(content.core_values || defaultCoreValues).map((value, index) => {
+                // Map each core value to a specific icon and color
+                const getValueConfig = (valueName: string) => {
+                  const lowerValue = valueName.toLowerCase();
+                  if (lowerValue.includes('expertise')) {
+                    return {
+                      icon: <Lightbulb className="h-6 w-6 sm:h-7 sm:w-7 text-white" />,
+                      bgColor: 'bg-amber-500',
+                      hoverBg: 'group-hover:bg-amber-600'
+                    };
+                  } else if (lowerValue.includes('integrity')) {
+                    return {
+                      icon: <Shield className="h-6 w-6 sm:h-7 sm:w-7 text-white" />,
+                      bgColor: 'bg-blue-600',
+                      hoverBg: 'group-hover:bg-blue-700'
+                    };
+                  } else if (lowerValue.includes('excellence')) {
+                    return {
+                      icon: <Sparkles className="h-6 w-6 sm:h-7 sm:w-7 text-white" />,
+                      bgColor: 'bg-purple-600',
+                      hoverBg: 'group-hover:bg-purple-700'
+                    };
+                  } else if (lowerValue.includes('transformation') || lowerValue.includes('empowerment')) {
+                    return {
+                      icon: <TrendingUp className="h-6 w-6 sm:h-7 sm:w-7 text-white" />,
+                      bgColor: 'bg-emerald-600',
+                      hoverBg: 'group-hover:bg-emerald-700'
+                    };
+                  } else if (lowerValue.includes('respect')) {
+                    return {
+                      icon: <Heart className="h-6 w-6 sm:h-7 sm:w-7 text-white" />,
+                      bgColor: 'bg-rose-600',
+                      hoverBg: 'group-hover:bg-rose-700'
+                    };
+                  }
+                  return {
+                    icon: <CheckCircle className="h-6 w-6 sm:h-7 sm:w-7 text-white" />,
+                    bgColor: 'bg-primary',
+                    hoverBg: 'group-hover:bg-primary/90'
+                  };
+                };
+
+                const config = getValueConfig(value);
+
+                return (
+                  <div
+                    key={index}
+                    className="group flex flex-col items-center text-center p-4 sm:p-5 bg-white rounded-lg border-2 border-slate-200 hover:border-slate-300 transition-all duration-500 hover:shadow-xl hover:-translate-y-2"
+                    data-aos="fade-up"
+                    data-aos-delay={100 + (index * 80)}
+                  >
+                    <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full ${config.bgColor} ${config.hoverBg} flex items-center justify-center mb-4 transition-all duration-500 group-hover:scale-110 shadow-md`}>
+                      {config.icon}
+                    </div>
+                    <h5 className="font-semibold text-navy-800 text-xs sm:text-sm leading-tight">
+                      {value}
+                    </h5>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
