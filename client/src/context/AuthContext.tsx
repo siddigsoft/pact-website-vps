@@ -22,11 +22,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const storedToken = localStorage.getItem('cms-jwt');
     const storedUser = localStorage.getItem('cms-user');
-    
+
     if (storedToken) {
       setToken(storedToken);
     }
-    
+
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
@@ -34,18 +34,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         console.error('Error parsing user data:', error);
       }
     }
-    
+
     setIsLoading(false);
   }, []);
 
   const login = (newToken: string, newUser: any) => {
     setToken(newToken);
     setUser(newUser);
-    
+
     // Save to localStorage
     localStorage.setItem('cms-jwt', newToken);
     localStorage.setItem('cms-user', JSON.stringify(newUser));
-    
+
     // Navigate after state has been updated
     setTimeout(() => {
       const redirectPath = localStorage.getItem('auth-redirect');
@@ -61,13 +61,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = () => {
     setToken(null);
     setUser(null);
-    
+
     // Remove from localStorage
     localStorage.removeItem('cms-jwt');
     localStorage.removeItem('cms-user');
-    
+
     // Redirect to login
-    navigate('/admin/login');
+    navigate('/');
   };
 
   return (

@@ -25,7 +25,7 @@ const app: Express = express();
 
 // CORS configuration based on environment
 const corsOptions = {
-  origin: function(origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
+  origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
     const allowedOrigins = [
       'http://localhost:5000',
       'http://localhost:3000',
@@ -46,14 +46,15 @@ const corsOptions = {
       'https://pactorg1.com',
       'http://www.pactorg1.com',
       'https://www.pactorg1.com',
+      'https://pact-website-fx4y.onrender.com',
       process.env.PRODUCTION_URL, // Add your production URL here
     ].filter(Boolean); // Remove undefined values
-    
+
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) {
       return callback(null, true);
     }
-    
+
     if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
       callback(null, true);
     } else {
