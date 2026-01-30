@@ -375,66 +375,19 @@ const About = () => {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-              {(content.core_values || defaultCoreValues).map((value, index) => {
-                // Map each core value to a specific icon and color
-                const getValueConfig = (valueName: string) => {
-                  const lowerValue = valueName.toLowerCase();
-                  if (lowerValue.includes('expertise')) {
-                    return {
-                      icon: <Lightbulb className="h-6 w-6 sm:h-7 sm:w-7 text-white" />,
-                      bgColor: 'bg-amber-500',
-                      hoverBg: 'group-hover:bg-amber-600'
-                    };
-                  } else if (lowerValue.includes('integrity')) {
-                    return {
-                      icon: <Shield className="h-6 w-6 sm:h-7 sm:w-7 text-white" />,
-                      bgColor: 'bg-blue-600',
-                      hoverBg: 'group-hover:bg-blue-700'
-                    };
-                  } else if (lowerValue.includes('excellence')) {
-                    return {
-                      icon: <Sparkles className="h-6 w-6 sm:h-7 sm:w-7 text-white" />,
-                      bgColor: 'bg-purple-600',
-                      hoverBg: 'group-hover:bg-purple-700'
-                    };
-                  } else if (lowerValue.includes('transformation') || lowerValue.includes('empowerment')) {
-                    return {
-                      icon: <TrendingUp className="h-6 w-6 sm:h-7 sm:w-7 text-white" />,
-                      bgColor: 'bg-emerald-600',
-                      hoverBg: 'group-hover:bg-emerald-700'
-                    };
-                  } else if (lowerValue.includes('respect')) {
-                    return {
-                      icon: <Heart className="h-6 w-6 sm:h-7 sm:w-7 text-white" />,
-                      bgColor: 'bg-rose-600',
-                      hoverBg: 'group-hover:bg-rose-700'
-                    };
-                  }
-                  return {
-                    icon: <CheckCircle className="h-6 w-6 sm:h-7 sm:w-7 text-white" />,
-                    bgColor: 'bg-primary',
-                    hoverBg: 'group-hover:bg-primary/90'
-                  };
-                };
-
-                const config = getValueConfig(value);
-
-                return (
-                  <div
-                    key={index}
-                    className="group flex flex-col items-center text-center p-4 sm:p-5 bg-white rounded-lg border-2 border-slate-200 hover:border-slate-300 transition-all duration-500 hover:shadow-xl hover:-translate-y-2"
-                    data-aos="fade-up"
-                    data-aos-delay={100 + (index * 80)}
-                  >
-                    <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full ${config.bgColor} ${config.hoverBg} flex items-center justify-center mb-4 transition-all duration-500 group-hover:scale-110 shadow-md`}>
-                      {config.icon}
-                    </div>
-                    <h5 className="font-semibold text-navy-800 text-xs sm:text-sm leading-tight">
-                      {value}
-                    </h5>
-                  </div>
-                );
-              })}
+              {(content.core_values || defaultCoreValues).map((value, index) => (
+                <div
+                  key={index}
+                  className="group relative overflow-hidden bg-white rounded-lg border-2 border-slate-200 hover:border-primary/40 transition-all duration-500 hover:shadow-lg hover:-translate-y-2 p-5 sm:p-6 flex items-center justify-center"
+                  data-aos="fade-up"
+                  data-aos-delay={100 + (index * 80)}
+                >
+                  <div className="absolute top-0 left-0 w-full h-1 bg-primary transition-all duration-500"></div>
+                  <h5 className="font-bold text-navy-800 text-sm sm:text-base text-center leading-tight">
+                    {value}
+                  </h5>
+                </div>
+              ))}
             </div>
           </div>
         </div>
