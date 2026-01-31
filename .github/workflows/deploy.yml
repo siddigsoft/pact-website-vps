@@ -23,15 +23,22 @@ jobs:
 
       - name: Build project (frontend + bundled backend)
         run: |
-          # Build React frontend
+          # Build React frontend (this uses lightningcss/babel - that's fine)
           npx vite build
-          # Bundle backend with ALL dependencies (no external deps)
+          # Bundle backend with ONLY production dependencies (exclude frontend-only deps)
           npx esbuild server/index.ts \
             --platform=node \
             --bundle \
             --format=esm \
             --outdir=dist \
-            --target=node20
+            --target=node20 \
+            --external:vite \
+            --external:@vitejs/* \
+            --external:@babel/* \
+            --external:lightningcss \
+            --external:*.node \
+            --external:@replit/* \
+            --external:esbuild
 
       - name: Transfer built files to VPS
         uses: appleboy/scp-action@v0.1.7
