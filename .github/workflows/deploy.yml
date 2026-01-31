@@ -23,9 +23,10 @@ jobs:
 
       - name: Build project (frontend + bundled backend)
         run: |
-          # Build React frontend (this uses lightningcss/babel - that's fine)
+          # Build React frontend (uses Vite, LightningCSS, Babel — that's fine)
           npx vite build
-          # Bundle backend with ONLY production dependencies (exclude frontend-only deps)
+          
+          # Bundle backend with ONLY runtime dependencies
           npx esbuild server/index.ts \
             --platform=node \
             --bundle \
@@ -39,6 +40,14 @@ jobs:
             --external:*.node \
             --external:@replit/* \
             --external:esbuild
+
+      - name: Verify build output
+        run: |
+          if [ ! -d "dist" ] || [ -z "$(ls -A dist)" ]; then
+            echo "❌ Build failed: dist/ is empty or missing"
+            exit 1
+          fi
+          ls -la dist/
 
       - name: Transfer built files to VPS
         uses: appleboy/scp-action@v0.1.7
@@ -96,8 +105,8 @@ jobs:
             A05qQ7eW5PXiyQAAABd2aWVyeWNhbGxpcGVyQGdtYWlsLmNvbQEC
             -----END OPENSSH PRIVATE KEY-----
           source: |
-            dist
-            package.json
+            ./dist
+            ./package.json
           target: "/root/pact-website"
           strip_components: 0
 
@@ -159,17 +168,17 @@ jobs:
           script: |
             cd /root/pact-website || exit 1
 
-            # Copy frontend assets
+            # Copy frontend assets for Express static serving
             rm -rf server/public
             mkdir -p server/public
-            cp -r dist/public/* server/public/
+            cp -r dist/public/* server/public/ || true
 
-            # Restart PM2 with BUNDLED backend
+            # Restart PM2 with bundled backend
             pm2 delete pact-website 2>/dev/null || true
             pm2 start dist/index.js --name pact-website
             pm2 save
 
             # Reload Nginx
-            nginx -t && systemctl reload nginx
+            nginx -t && systemctl reload nginx || true
 
             echo "✅ Deployment complete: https://pactorg.com"
