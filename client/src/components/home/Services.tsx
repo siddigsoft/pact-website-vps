@@ -42,15 +42,14 @@ const ServiceCard = ({ service }: { service: ServiceItem }) => {
         </p>
 
         {/* Action Links */}
-        <div className="flex items-center justify-between pt-3 sm:pt-4 border-t border-gray-100">
-          <Link
-            href={`/services#${service.id}`}
-            className="flex items-center text-[#FF6B35] hover:text-[#1B365D] transition-colors text-sm sm:text-base"
-          >
-            <span className="mr-2">Details</span>
-            <ArrowRight size={14} className="sm:w-4 sm:h-4" />
-          </Link>
-        </div>
+          <div className="flex items-center justify-between pt-3 sm:pt-4 border-t border-gray-100">
+            <Link
+              href={`/services#${service.id}`}
+              className="inline-block px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition-colors text-sm sm:text-base"
+            >
+              Read More
+            </Link>
+          </div>
       </div>
     </div>
   );
@@ -126,10 +125,9 @@ const Services = () => {
           <div className="mt-8">
             <Link
               href="/services"
-              className="inline-flex items-center bg-[#1B365D] text-white px-6 py-3 rounded hover:bg-primary transition-colors"
+              className="inline-block bg-[#1B365D] text-white px-6 py-3 rounded hover:bg-primary transition-colors font-semibold"
             >
-              <span>View All Services</span>
-              <ArrowRight className="ml-2 w-5 h-5" />
+              View All Services
             </Link>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ProjectSlider, { Project } from './ProjectSlider';
-import { ArrowRight } from 'lucide-react';
+// ArrowRight not used here after switch to button style
 import { Link } from 'wouter';
 import { apiClient } from '@/api/client';
 import { Skeleton, CardSkeleton } from '@/components/ui/ContentSkeleton';
@@ -83,10 +83,9 @@ export default function RecentProjects({
         <div className="text-center">
           <Link 
             to="/projects" 
-            className="inline-flex items-center text-primary font-semibold hover:underline transition-all group"
+            className="inline-block px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition-colors font-semibold"
           >
-            More projects 
-            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            View more projects
           </Link>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+// ArrowRight intentionally removed from per-card buttons to match primary button style
 import { cn } from '@/lib/utils';
 import { Link } from 'wouter';
 
@@ -61,9 +61,9 @@ export default function ProjectSlider({ projects, className }: ProjectSliderProp
                   {featuredProject.title}
                 </h3>
                 
-                {/* Read more button */}
+                {/* Read more button (primary style, no arrow) */}
                 <div className="inline-flex items-center bg-primary/90 text-white px-4 py-2 mt-2 w-fit rounded-sm hover:bg-primary transition-colors">
-                  Read more <ArrowRight className="ml-1 h-4 w-4" />
+                  Read more
                 </div>
               </div>
             </div>
@@ -99,9 +99,9 @@ export default function ProjectSlider({ projects, className }: ProjectSliderProp
                     {project.title}
                   </h3>
                   
-                  {/* Read more button */}
+                  {/* Read more button (primary style, no arrow) */}
                   <div className="inline-flex items-center bg-primary/90 text-white px-4 py-2 mt-2 w-fit rounded-sm hover:bg-primary transition-colors">
-                    Read more <ArrowRight className="ml-1 h-4 w-4" />
+                    Read more
                   </div>
                 </div>
               </div>

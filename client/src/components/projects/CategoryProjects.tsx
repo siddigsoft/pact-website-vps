@@ -112,13 +112,13 @@ export default function CategoryProjects({
                     </div>
                     
                     {/* Read More Link */}
-                    <div className="mt-auto">
-                      <div className="inline-flex items-center font-medium group-hover:underline
-                        ${project.bg_image ? 'text-white group-hover:text-white' : 'text-white'}
-                      ">
+                    <div className="mt-auto text-right">
+                      <Link
+                        href={`/projects/${project.id}`}
+                        className="inline-block px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition-colors"
+                      >
                         Read More
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                      </div>
+                      </Link>
                     </div>
                   </div>
                 </div>
