@@ -4,6 +4,19 @@ import { useQuery } from '@tanstack/react-query';
 import * as teamApi from '@/api/team';
 import React from 'react';
 
+// Utility to strip HTML tags and normalize whitespace for short excerpts
+const stripHtml = (html?: string) => {
+  if (!html) return '';
+  try {
+    // Remove tags
+    const withoutTags = html.replace(/<[^>]*>/g, ' ');
+    // Collapse whitespace/newlines
+    return withoutTags.replace(/\s+/g, ' ').trim();
+  } catch (e) {
+    return html;
+  }
+};
+
 // Define the TeamMember interface to match the API response
 interface TeamMember {
   id: number;
@@ -23,6 +36,8 @@ interface TeamMember {
     email?: string;
     linkedin?: string;
   };
+  // derived category (Board, Advisory Board, Management, Associate Consultant, etc.)
+  category?: string;
 }
 
 // Define Service interface
@@ -66,7 +81,7 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Name and Position */}
+  {/* Name, Position and short bio */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8 }}>
         <div style={{ 
           fontWeight: 600, 
@@ -89,6 +104,30 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => {
             {member.position}
           </div>
         )}
+        {/* Short bio excerpt (strip HTML so artifacts like <p><br></p> don't show) */}
+        {(() => {
+          const plain = stripHtml(member.bio);
+          if (!plain) return null;
+          const excerpt = plain.length > 140 ? `${plain.slice(0, 137)}...` : plain;
+          return (
+            <div style={{ color: '#475569', fontSize: 13, lineHeight: 1.4, marginTop: 6 }}>
+              {excerpt}
+            </div>
+          );
+        })()}
+        {/* Contact icons */}
+        <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+          {member.contact?.email || member.email ? (
+            <a href={`mailto:${member.contact?.email || member.email}`} style={{ color: '#1a3a5f', fontSize: 13, textDecoration: 'none' }}>
+              <Mail className="w-4 h-4 inline-block mr-1" /> Email
+            </a>
+          ) : null}
+          {member.contact?.linkedin || member.linkedin ? (
+            <a href={member.contact?.linkedin || member.linkedin} target="_blank" rel="noopener noreferrer" style={{ color: '#1a3a5f', fontSize: 13, textDecoration: 'none' }}>
+              <Linkedin className="w-4 h-4 inline-block mr-1" /> LinkedIn
+            </a>
+          ) : null}
+        </div>
       </div>
     </div>
   );
@@ -99,7 +138,14 @@ const TeamPage = () => {
   const [activeFilter, setActiveFilter] = useState<TeamFilter>('All');
   const [filteredMembers, setFilteredMembers] = useState<TeamMember[]>([]);
   const [services, setServices] = useState<Service[]>([]);
-  const [hasAdvisory, setHasAdvisory] = useState(false);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [membersWithCategory, setMembersWithCategory] = useState<TeamMember[]>([]);
+  
+  const categoryDescriptions: Record<string, string> = {
+    'Advisory Board': 'Our Advisory Board offers experienced guidance and specialist advice across our practice areas.',
+    'Management': 'Senior leaders responsible for operations, delivery, and client relationships.',
+    'Associate Consultant': 'Early-career and associate consultants who support project delivery and analysis.'
+  };
 
   // Fetch services data from API
   useEffect(() => {
@@ -165,25 +211,35 @@ const TeamPage = () => {
   // Use the data from useQuery
   const allTeamMembers: TeamMember[] = (teamMembersData as any)?.data || [];
 
-  // Check for advisory members
+  // Derive categories from team member position/department and attach a category to each member
   useEffect(() => {
-    if (allTeamMembers.length > 0) {
-      const advisoryMembers = allTeamMembers.filter((member: TeamMember) =>
-        member.position?.toLowerCase().includes('advisor') ||
-        member.position?.toLowerCase().includes('advisory') ||
-        member.department?.toLowerCase().includes('advisory')
-      );
+    if (!allTeamMembers || allTeamMembers.length === 0) return;
 
-      setHasAdvisory(advisoryMembers.length > 0);
+    const detectCategory = (member: TeamMember) => {
+      const pos = (member.position || '').toLowerCase();
+      const dep = (member.department || '').toLowerCase();
 
-      // Only set to Advisory Board if there are advisory members and the current filter is All
-      if (advisoryMembers.length > 0 && activeFilter === 'All') {
-        setActiveFilter('Advisory Board');
-      }
-      // If there are no advisory members and the filter is Advisory Board, switch to All
-      if (advisoryMembers.length === 0 && activeFilter === 'Advisory Board') {
-        setActiveFilter('All');
-      }
+      // Normalize to the limited set: Advisory Board, Management, Associate Consultant
+      if (pos.includes('advisor') || pos.includes('advisory') || dep.includes('advisory') || pos.includes('board') || dep.includes('board') || pos.includes('chair')) return 'Advisory Board';
+      if (pos.includes('associate') || pos.includes('associate consultant')) return 'Associate Consultant';
+      if (pos.includes('manager') || pos.includes('director') || pos.includes('chief') || pos.includes('head') || dep.includes('management')) return 'Management';
+
+      // Fallback: mark as Other so we can show them in an "Other" section inside the All view
+      return 'Other';
+    };
+
+  const membersWithCategory = allTeamMembers.map(m => ({ ...m, category: detectCategory(m) }));
+
+  // compute categories (always expose the preferred set so tabs are stable)
+  const preferredOrder = ['Advisory Board', 'Management', 'Associate Consultant'];
+  setCategories(preferredOrder);
+  setMembersWithCategory(membersWithCategory);
+
+    // if activeFilter is 'All' and there are categories, keep as All; otherwise ensure activeFilter still valid
+    // Ensure activeFilter is valid (either All or one of the preferred categories)
+    const validFilters = ['All', ...preferredOrder];
+    if (!validFilters.includes(activeFilter)) {
+      setActiveFilter('All');
     }
     // eslint-disable-next-line
   }, [allTeamMembers]);
@@ -195,16 +251,11 @@ const TeamPage = () => {
       return;
     }
 
-    let result = [...allTeamMembers];
+  let result = [...membersWithCategory.length ? membersWithCategory : allTeamMembers];
 
     // Apply category filter
-    if (activeFilter === 'Advisory Board') {
-      // Filter for advisory board members
-      result = result.filter(member =>
-        member.position?.toLowerCase().includes('advisor') ||
-        member.position?.toLowerCase().includes('advisory') ||
-        member.department?.toLowerCase().includes('advisory')
-      );
+    if (activeFilter !== 'All') {
+      result = result.filter(member => (member.category || 'Other') === activeFilter);
     }
 
     // Apply search filter
@@ -265,17 +316,27 @@ const TeamPage = () => {
       <div className="border-b border-gray-200">
         <div className="container mx-auto px-4 md:px-8">
           <div className="flex flex-wrap items-center overflow-x-auto" data-aos="fade-up">
-            {hasAdvisory && (
+            <button
+              className={`py-3 sm:py-4 px-4 sm:px-5 font-medium text-base sm:text-lg border-b-2 transition-colors whitespace-nowrap ${activeFilter === 'All'
+                ? 'border-accent text-accent'
+                : 'border-transparent text-gray-600 hover:text-primary'
+                }`}
+              onClick={() => setActiveFilter('All')}
+            >
+              All
+            </button>
+            {categories.map(cat => (
               <button
-                className={`py-3 sm:py-4 px-4 sm:px-5 font-medium text-base sm:text-lg border-b-2 transition-colors whitespace-nowrap ${activeFilter === 'Advisory Board'
+                key={cat}
+                className={`py-3 sm:py-4 px-4 sm:px-5 font-medium text-base sm:text-lg border-b-2 transition-colors whitespace-nowrap ${activeFilter === cat
                   ? 'border-accent text-accent'
                   : 'border-transparent text-gray-600 hover:text-primary'
                   }`}
-                onClick={() => setActiveFilter('Advisory Board')}
+                onClick={() => setActiveFilter(cat)}
               >
-                Advisory Board
+                {cat}
               </button>
-            )}
+            ))}
           </div>
         </div>
       </div>
@@ -290,17 +351,27 @@ const TeamPage = () => {
                 <h3 className="text-lg sm:text-xl font-bold text-primary mb-3 sm:mb-4">Our Team</h3>
 
                 <div className="flex flex-col space-y-2">
-                  {hasAdvisory && (
+                  <button
+                    className={`py-2 px-3 sm:px-4 text-left font-medium rounded-md transition-colors text-sm sm:text-base ${activeFilter === 'All'
+                      ? 'bg-primary text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
+                      }`}
+                    onClick={() => setActiveFilter('All')}
+                  >
+                    All
+                  </button>
+                  {categories.map(cat => (
                     <button
-                      className={`py-2 px-3 sm:px-4 text-left font-medium rounded-md transition-colors text-sm sm:text-base ${activeFilter === 'Advisory Board'
+                      key={cat}
+                      className={`py-2 px-3 sm:px-4 text-left font-medium rounded-md transition-colors text-sm sm:text-base ${activeFilter === cat
                         ? 'bg-primary text-white'
                         : 'text-gray-700 hover:bg-gray-100'
                         }`}
-                      onClick={() => setActiveFilter('Advisory Board')}
+                      onClick={() => setActiveFilter(cat)}
                     >
-                      Advisory Board
+                      {cat}
                     </button>
-                  )}
+                  ))}
                 </div>
               </div>
             </div>
@@ -333,12 +404,50 @@ const TeamPage = () => {
               ) : (
                 <>
 
-                  {/* Team Members Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                    {filteredMembers.map((member, index) => (
-                      <TeamMemberCard key={member.id} member={member} />
-                    ))}
-                  </div>
+                    {activeFilter === 'All' ? (
+                      // Group members by category and render each section. Also render an "Other" section for uncategorized specialists.
+                      <>
+                        {categories.map(cat => {
+                          const membersInCat = (membersWithCategory.length ? membersWithCategory : filteredMembers).filter(m => (m.category || 'Other') === cat);
+                          if (!membersInCat || membersInCat.length === 0) return null;
+                          return (
+                            <div key={cat} className="mb-8" data-aos="fade-up">
+                              <h3 className="text-2xl font-semibold text-dark mb-2">{cat}</h3>
+                              <p className="text-gray-600 mb-4">{categoryDescriptions[cat] || ''}</p>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                                {membersInCat.map(m => (
+                                  <TeamMemberCard key={m.id} member={m} />
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+
+                        {/* Other / Specialists section for uncategorized members */}
+                        {(() => {
+                          const others = (membersWithCategory.length ? membersWithCategory : filteredMembers).filter(m => !['Advisory Board', 'Management', 'Associate Consultant'].includes(m.category || ''));
+                          if (!others || others.length === 0) return null;
+                          return (
+                            <div key="other" className="mb-8" data-aos="fade-up">
+                              <h3 className="text-2xl font-semibold text-dark mb-2">Our Team</h3>
+                                <p className="text-gray-600 mb-4">A range of specialist consultants and subject-matter experts who support our projects.</p>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                                {others.map(m => (
+                                  <TeamMemberCard key={m.id} member={m} />
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </>
+                    ) : (
+                      // Render the filtered members in a grid
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                        {filteredMembers.map((member, index) => (
+                          <TeamMemberCard key={member.id} member={member} />
+                        ))}
+                      </div>
+                    )}
 
 
 
