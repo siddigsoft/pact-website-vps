@@ -652,16 +652,13 @@ const createHeroSlide: AsyncMulterHandler = async (req, res, next) => {
     // Process file uploads if they exist
     if (req.files && typeof req.files === 'object') {
       if ('backgroundImage' in req.files && req.files['backgroundImage'].length > 0) {
-        console.log("Uploading background image...");
         const uploadResult = await uploadFileToSupabase(req.files['backgroundImage'][0], BUCKETS.HERO);
-        console.log("Upload result:", uploadResult);
         if (uploadResult) {
           processedBody.backgroundImage = uploadResult.url;
         }
       }
 
       if ('videoBackground' in req.files && req.files['videoBackground'].length > 0) {
-        console.log("Uploading video background...");
         const uploadResult = await uploadFileToSupabase(req.files['videoBackground'][0], BUCKETS.HERO);
         if (uploadResult) {
           processedBody.videoBackground = uploadResult.url;
@@ -669,29 +666,17 @@ const createHeroSlide: AsyncMulterHandler = async (req, res, next) => {
       }
     }
 
-    console.log("Validating body:", processedBody);
     // Validate input data
     const validatedData = insertHeroSlideSchema.parse(processedBody);
-    console.log("Validation successful");
 
     // Create a new hero slide
     const slide = await storage.createHeroSlide(validatedData);
-    console.log("Hero slide created:", slide);
 
     res.status(201).json({
       success: true,
       data: slide
     });
   } catch (error) {
-    console.error("Error creating hero slide:", error);
-    if (error instanceof z.ZodError) {
-      res.status(400).json({
-        success: false,
-        message: "Validation error",
-        errors: error.errors
-      });
-      return;
-    }
     next(error);
   }
 };

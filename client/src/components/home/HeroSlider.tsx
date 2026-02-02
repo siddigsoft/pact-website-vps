@@ -156,16 +156,7 @@ const HeroSlider = () => {
 
   return (
     <section id="home" className="relative overflow-hidden bg-dark text-white">
-      {/* BearingPoint style progress bar */}
-      <div className="absolute top-0 left-0 right-0 z-30 h-1 bg-white/20">
-        <div
-          className="h-full bg-accent transition-all duration-[9000ms] ease-linear"
-          style={{
-            width: `${slideProgress}%`,
-            backgroundColor: currentSlide?.accentColor || '#FF8200'
-          }}
-        ></div>
-      </div>
+      {/* Progress bar removed per design request */}
 
       {/* Embla Carousel Container */}
       <div className="embla h-[70vh] md:h-[80vh] lg:h-[85vh] overflow-hidden" ref={emblaRef}>
@@ -271,22 +262,7 @@ const HeroSlider = () => {
         <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
       </button>
 
-      {/* Slide Indicators - BearingPoint horizontal lines style */}
-      <div className="absolute bottom-24 left-8 right-8 z-20 hidden md:flex gap-2 w-48">
-        {scrollSnaps.map((_, index) => (
-          <button
-            key={index}
-            className="h-1 transition-all duration-300 flex-grow"
-            style={{
-              backgroundColor: index === selectedIndex
-                ? (currentSlide?.accentColor || '#FF8200')
-                : 'rgba(255, 255, 255, 0.3)'
-            }}
-            onClick={() => scrollTo(index)}
-            aria-label={`Go to slide ${index + 1}`}
-          ></button>
-        ))}
-      </div>
+      {/* Slide indicators removed per design request */}
 
       {/* Scroll Down Indicator - BearingPoint style */}
       <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center animate-bounce md:hidden">
