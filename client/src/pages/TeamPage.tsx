@@ -315,9 +315,9 @@ const TeamPage = () => {
       {/* Team Categories Header Tabs */}
       <div className="border-b border-gray-200">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="flex flex-wrap items-center overflow-x-auto" data-aos="fade-up">
+          <div className="flex items-center overflow-x-auto whitespace-nowrap gap-2 lg:flex-wrap" data-aos="fade-up">
             <button
-              className={`py-3 sm:py-4 px-4 sm:px-5 font-medium text-base sm:text-lg border-b-2 transition-colors whitespace-nowrap ${activeFilter === 'All'
+              className={`py-2 sm:py-3 px-3 sm:px-4 font-medium text-xs sm:text-base border-b-2 transition-colors whitespace-nowrap ${activeFilter === 'All'
                 ? 'border-accent text-accent'
                 : 'border-transparent text-gray-600 hover:text-primary'
                 }`}
@@ -328,7 +328,7 @@ const TeamPage = () => {
             {categories.map(cat => (
               <button
                 key={cat}
-                className={`py-3 sm:py-4 px-4 sm:px-5 font-medium text-base sm:text-lg border-b-2 transition-colors whitespace-nowrap ${activeFilter === cat
+                className={`py-2 sm:py-3 px-3 sm:px-4 font-medium text-xs sm:text-base border-b-2 transition-colors whitespace-nowrap ${activeFilter === cat
                   ? 'border-accent text-accent'
                   : 'border-transparent text-gray-600 hover:text-primary'
                   }`}
@@ -351,27 +351,29 @@ const TeamPage = () => {
                 <h3 className="text-lg sm:text-xl font-bold text-primary mb-3 sm:mb-4">Our Team</h3>
 
                 <div className="flex flex-col space-y-2">
-                  <button
-                    className={`py-2 px-3 sm:px-4 text-left font-medium rounded-md transition-colors text-sm sm:text-base ${activeFilter === 'All'
-                      ? 'bg-primary text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                    onClick={() => setActiveFilter('All')}
-                  >
-                    All
-                  </button>
-                  {categories.map(cat => (
+                  <div className="flex gap-2 overflow-x-auto lg:flex-col">
                     <button
-                      key={cat}
-                      className={`py-2 px-3 sm:px-4 text-left font-medium rounded-md transition-colors text-sm sm:text-base ${activeFilter === cat
+                      className={`py-2 px-2 sm:px-4 text-left font-medium rounded-md transition-colors text-xs sm:text-sm ${activeFilter === 'All'
                         ? 'bg-primary text-white'
                         : 'text-gray-700 hover:bg-gray-100'
                         }`}
-                      onClick={() => setActiveFilter(cat)}
+                      onClick={() => setActiveFilter('All')}
                     >
-                      {cat}
+                      All
                     </button>
-                  ))}
+                    {categories.map(cat => (
+                      <button
+                        key={cat}
+                        className={`py-2 px-2 sm:px-4 text-left font-medium rounded-md transition-colors text-xs sm:text-sm ${activeFilter === cat
+                          ? 'bg-primary text-white'
+                          : 'text-gray-700 hover:bg-gray-100'
+                          }`}
+                        onClick={() => setActiveFilter(cat)}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
