@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { Navigation, MapPin } from 'lucide-react';
 
 // Fix for default markers in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -58,7 +59,7 @@ const LocationMap: React.FC<LocationMapProps> = ({
   }
 
   return (
-    <div style={{ height }} className="rounded-lg overflow-hidden">
+    <div style={{ height }} className="rounded-lg relative overflow-hidden">
       <MapContainer
         center={[lat, lng]}
         zoom={zoom}
@@ -74,10 +75,31 @@ const LocationMap: React.FC<LocationMapProps> = ({
             <div className="text-center">
               <h3 className="font-semibold">{city}, {country}</h3>
               {address && <p className="text-sm text-gray-600 mt-1">{address}</p>}
+              <button
+                onClick={() => {
+                  const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+                  window.open(googleMapsUrl, '_blank');
+                }}
+                className="mt-3 inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+              >
+                <Navigation size={14} />
+                Get Directions
+              </button>
             </div>
           </Popup>
         </Marker>
+        {/* Centered, fixed icon overlay (visible only when we have valid coordinates) */}
       </MapContainer>
+
+      {hasValidCoordinates && (
+        <div className="absolute left-1/2 top-1/2 pointer-events-none" style={{ transform: 'translate(-50%, -100%)' }} aria-hidden="true">
+          {/* pin icon (visually centered at the map center) */}
+          <div className="flex flex-col items-center">
+            <MapPin size={36} className="text-blue-600 drop-shadow-lg" />
+            <span className="block w-2 h-2 bg-blue-600 rounded-full mt-1 animate-pulse opacity-90"></span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
