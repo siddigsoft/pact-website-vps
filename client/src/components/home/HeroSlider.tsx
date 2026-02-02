@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'wouter';
 import useEmblaCarousel from 'embla-carousel-react';
-import { ChevronLeft, ChevronRight, ArrowRight, ArrowDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 // Define the slide interface
 interface SlideContent {
@@ -175,7 +175,16 @@ const HeroSlider = () => {
                     </div>
                   )}
 
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 text-navy-900 leading-tight">
+                  {/* Reduce headline size for long titles or ones containing 'PACT' so they don't wrap */}
+                  <h1
+                    className={
+                      `font-bold mb-3 sm:mb-4 text-navy-900 leading-tight ` +
+                      // If title contains PACT or is long, slightly reduce the lg size to keep it on one line
+                      (slide.title && (slide.title.includes('PACT') || slide.title.length > 24)
+                        ? 'text-2xl sm:text-3xl md:text-4xl lg:text-4xl'
+                        : 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl')
+                    }
+                  >
                     {slide.title}
                     {slide.subtitle && <span className="block mt-1 sm:mt-2 text-accent text-lg sm:text-xl md:text-2xl lg:text-3xl">{slide.subtitle}</span>}
                   </h1>
@@ -263,11 +272,6 @@ const HeroSlider = () => {
       </button>
 
       {/* Slide indicators removed per design request */}
-
-      {/* Scroll Down Indicator - BearingPoint style */}
-      <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center animate-bounce md:hidden">
-        <ArrowDown className="w-6 h-6 text-white/80" />
-      </div>
     </section>
   );
 };
