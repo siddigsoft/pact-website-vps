@@ -28,11 +28,11 @@ const LocationMap: React.FC<LocationMapProps> = ({
   country,
   address,
   height = '400px',
-  zoom = 13
+  zoom = 10 // Better zoom level for regional view
 }) => {
-  // Default coordinates (fallback to a central location if no coordinates provided)
-  const defaultLat = 51.505; // London coordinates as fallback
-  const defaultLng = -0.09;
+  // Default coordinates (fallback to East Africa region - good center for PACT's operations)
+  const defaultLat = 1.2921; // Nairobi, Kenya coordinates as fallback (central to their operations)
+  const defaultLng = 36.8219;
 
   const lat = latitude ? parseFloat(latitude) : defaultLat;
   const lng = longitude ? parseFloat(longitude) : defaultLng;

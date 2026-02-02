@@ -30,6 +30,8 @@ interface FormData {
   country: string;
   image: File | string | null;
   address: string;
+  latitude: string;
+  longitude: string;
 }
 
 export default function LocationsPage() {
@@ -39,9 +41,12 @@ export default function LocationsPage() {
     city: '',
     country: '',
     image: null,
-    address: ''
+    address: '',
+    latitude: '',
+    longitude: ''
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -128,7 +133,9 @@ export default function LocationsPage() {
       city: '',
       country: '',
       image: null,
-      address: ''
+      address: '',
+      latitude: '',
+      longitude: ''
     });
     setImagePreview(null);
     setSelectedLocation(null);
@@ -140,7 +147,9 @@ export default function LocationsPage() {
       city: location.city,
       country: location.country,
       image: location.image || null,
-      address: location.address || ''
+      address: location.address || '',
+      latitude: location.latitude || '',
+      longitude: location.longitude || ''
     });
     setImagePreview(location.image || null);
     setIsDialogOpen(true);
@@ -153,6 +162,50 @@ export default function LocationsPage() {
       setImagePreview(URL.createObjectURL(file));
     }
   };
+
+  const handleGetCurrentLocation = () => {
+    setIsGettingLocation(true);
+
+    if (!navigator.geolocation) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Geolocation is not supported by this browser.',
+      });
+      setIsGettingLocation(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setFormData(prev => ({
+          ...prev,
+          latitude: latitude.toString(),
+          longitude: longitude.toString()
+        }));
+        setIsGettingLocation(false);
+        toast({
+          title: 'Success',
+          description: 'Location coordinates retrieved successfully.',
+        });
+      },
+      (error) => {
+        console.error('Error getting location:', error);
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Failed to get current location. Please check your browser permissions.',
+        });
+        setIsGettingLocation(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000, // 5 minutes
+      }
+    );
+  };
   
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -161,7 +214,9 @@ export default function LocationsPage() {
       city: formData.city,
       country: formData.country,
       image: formData.image,
-      address: formData.address
+      address: formData.address,
+      latitude: formData.latitude || null,
+      longitude: formData.longitude || null
     };
 
     if (selectedLocation) {
@@ -310,6 +365,41 @@ export default function LocationsPage() {
                   value={formData.address}
                   onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
                 />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="latitude">Latitude</Label>
+                  <Input
+                    id="latitude"
+                    type="number"
+                    step="any"
+                    value={formData.latitude}
+                    onChange={(e) => setFormData(prev => ({ ...prev, latitude: e.target.value }))}
+                    placeholder="e.g. 40.7128"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="longitude">Longitude</Label>
+                  <Input
+                    id="longitude"
+                    type="number"
+                    step="any"
+                    value={formData.longitude}
+                    onChange={(e) => setFormData(prev => ({ ...prev, longitude: e.target.value }))}
+                    placeholder="e.g. -74.0060"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleGetCurrentLocation}
+                  disabled={isGettingLocation}
+                >
+                  {isGettingLocation ? 'Getting Location...' : '📍 Get Current Location'}
+                </Button>
               </div>
             </div>
             <DialogFooter>

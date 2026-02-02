@@ -1322,7 +1322,7 @@ const getLocation: AsyncHandler = async (req, res, next) => {
 
 const createLocation: AsyncMulterHandler = async (req, res, next) => {
   try {
-    const { city, country, address } = req.body;
+    const { city, country, address, latitude, longitude } = req.body;
 
     // Validate required fields
     if (!city || !country) {
@@ -1345,6 +1345,8 @@ const createLocation: AsyncMulterHandler = async (req, res, next) => {
       city,
       country,
       address: address || null,
+      latitude: latitude || null,
+      longitude: longitude || null,
       image,
       updated_by: (req as any).user?.id
     };
@@ -1368,7 +1370,7 @@ const createLocation: AsyncMulterHandler = async (req, res, next) => {
 const updateLocation: AsyncMulterHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { city, country, address } = req.body;
+    const { city, country, address, latitude, longitude } = req.body;
 
     // Validate required fields if provided
     if ((city !== undefined && !city) || (country !== undefined && !country)) {
@@ -1391,6 +1393,8 @@ const updateLocation: AsyncMulterHandler = async (req, res, next) => {
       ...(city !== undefined && { city }),
       ...(country !== undefined && { country }),
       ...(address !== undefined && { address }),
+      ...(latitude !== undefined && { latitude }),
+      ...(longitude !== undefined && { longitude }),
       ...(image !== undefined && { image }),
       updated_by: (req as any).user?.id
     };

@@ -39,7 +39,7 @@ export const createLocation = async (data: LocationInput) => {
   
   // Add other fields
   Object.entries(data).forEach(([key, value]) => {
-    if (value && (key !== 'image' || !((value as any) instanceof File))) {
+    if ((value !== undefined && value !== null) && (key !== 'image' || !((value as any) instanceof File))) {
       formData.append(key, value as string);
     }
   });
@@ -63,7 +63,7 @@ export const updateLocation = async (id: number, data: LocationUpdate) => {
   
   // Add other fields
   Object.entries(data).forEach(([key, value]) => {
-    if (value && (key !== 'image' || !((value as any) instanceof File))) {
+    if ((value !== undefined && value !== null) && (key !== 'image' || !((value as any) instanceof File))) {
       formData.append(key, value as string);
     }
   });
