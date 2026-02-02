@@ -193,6 +193,8 @@ const TeamPage = () => {
         image: member.image || null,
         slug: member.slug || '',
         metaDescription: member.metaDescription || null,
+        // Preserve any persisted category from API
+        category: member.category || undefined,
         // No flattening of email/linkedin
         contact: {
           email: member.email || undefined,
@@ -228,7 +230,8 @@ const TeamPage = () => {
       return 'Other';
     };
 
-  const membersWithCategory = allTeamMembers.map(m => ({ ...m, category: detectCategory(m) }));
+  // Only apply the heuristic when the API hasn't provided a category
+  const membersWithCategory = allTeamMembers.map(m => ({ ...m, category: (m.category && String(m.category).trim()) ? m.category : detectCategory(m) }));
 
   // compute categories (always expose the preferred set so tabs are stable)
   const preferredOrder = ['Advisory Board', 'Management', 'Associate Consultant'];
@@ -272,7 +275,7 @@ const TeamPage = () => {
     }
 
     setFilteredMembers(result);
-  }, [searchTerm, activeFilter, allTeamMembers, isLoading]); // Add isLoading to dependencies
+  }, [searchTerm, activeFilter, allTeamMembers, isLoading, membersWithCategory]); // Add membersWithCategory so filters update when categories are derived
 
   // Initialize AOS when component mounts
   useEffect(() => {
@@ -407,47 +410,28 @@ const TeamPage = () => {
                 <>
 
                     {activeFilter === 'All' ? (
-                      // Group members by category and render each section. Also render an "Other" section for uncategorized specialists.
-                      <>
-                        {categories.map(cat => {
-                          const membersInCat = (membersWithCategory.length ? membersWithCategory : filteredMembers).filter(m => (m.category || 'Other') === cat);
-                          if (!membersInCat || membersInCat.length === 0) return null;
-                          return (
-                            <div key={cat} className="mb-8" data-aos="fade-up">
-                              <h3 className="text-2xl font-semibold text-dark mb-2">{cat}</h3>
-                              <p className="text-gray-600 mb-4">{categoryDescriptions[cat] || ''}</p>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                                {membersInCat.map(m => (
-                                  <TeamMemberCard key={m.id} member={m} />
-                                ))}
-                              </div>
-                            </div>
-                          );
-                        })}
-
-                        {/* Other / Specialists section for uncategorized members */}
-                        {(() => {
-                          const others = (membersWithCategory.length ? membersWithCategory : filteredMembers).filter(m => !['Advisory Board', 'Management', 'Associate Consultant'].includes(m.category || ''));
-                          if (!others || others.length === 0) return null;
-                          return (
-                            <div key="other" className="mb-8" data-aos="fade-up">
-                              <h3 className="text-2xl font-semibold text-dark mb-2">Our Team</h3>
-                                <p className="text-gray-600 mb-4">A range of specialist consultants and subject-matter experts who support our projects.</p>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                                {others.map(m => (
-                                  <TeamMemberCard key={m.id} member={m} />
-                                ))}
-                              </div>
-                            </div>
-                          );
-                        })()}
-                      </>
+                      // Show all members in a flat grid with an "Our Team" heading and description
+                      <div className="mb-8" data-aos="fade-up">
+                        <h3 className="text-2xl font-semibold text-dark mb-2">Our Team</h3>
+                        <p className="text-gray-600 mb-4">A range of specialist consultants and subject-matter experts who support our projects and deliver value to our clients.</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                          {(membersWithCategory.length ? membersWithCategory : filteredMembers).map((member) => (
+                            <TeamMemberCard key={member.id} member={member} />
+                          ))}
+                        </div>
+                      </div>
                     ) : (
-                      // Render the filtered members in a grid
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                        {filteredMembers.map((member, index) => (
-                          <TeamMemberCard key={member.id} member={member} />
-                        ))}
+                      // Show only the selected category with an optional description (e.g., Advisory Board)
+                      <div className="mb-8" data-aos="fade-up">
+                        <h3 className="text-2xl font-semibold text-dark mb-2">{activeFilter}</h3>
+                        {categoryDescriptions[activeFilter] && (
+                          <p className="text-gray-600 mb-4">{categoryDescriptions[activeFilter]}</p>
+                        )}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                          {filteredMembers.map(member => (
+                            <TeamMemberCard key={member.id} member={member} />
+                          ))}
+                        </div>
                       </div>
                     )}
 

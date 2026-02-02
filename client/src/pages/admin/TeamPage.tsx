@@ -102,7 +102,8 @@ export default function TeamPage() {
     email: '',
     linkedin: '',
     image: null as File | null,
-    serviceIds: [] as number[]
+    serviceIds: [] as number[],
+    category: ''
   });
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -428,7 +429,8 @@ export default function TeamPage() {
               email: '',
               linkedin: '',
               image: null,
-              serviceIds: []
+              serviceIds: [],
+              category: ''
             });
             setImagePreview(null);
             setIsDialogOpen(true);
@@ -589,7 +591,8 @@ export default function TeamPage() {
                           email: member.email || '',
                           linkedin: member.linkedin || '',
                           image: null,
-                          serviceIds: member.services?.map(service => service.id) || []
+                          serviceIds: member.services?.map(service => service.id) || [],
+                          category: (member as any).category || ''
                         });
                         setImagePreview(null);
                         setIsDialogOpen(true);
@@ -695,7 +698,8 @@ export default function TeamPage() {
                             email: member.email || '',
                             linkedin: member.linkedin || '',
                             image: null,
-                            serviceIds: member.services?.map(service => service.id) || []
+                            serviceIds: member.services?.map(service => service.id) || [],
+                            category: (member as any).category || ''
                           });
                           setIsDialogOpen(true);
                         }}>
@@ -825,6 +829,23 @@ export default function TeamPage() {
                   placeholder="Enter position"
                   required
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="category">Category</Label>
+                <Select
+                  value={formData.category || 'none'}
+                  onValueChange={(value) => setFormData({ ...formData, category: value === 'none' ? '' : value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No category</SelectItem>
+                    <SelectItem value="Advisory Board">Advisory Board</SelectItem>
+                    <SelectItem value="Management">Management</SelectItem>
+                    <SelectItem value="Associate Consultant">Associate Consultant</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="department">Department</Label>
