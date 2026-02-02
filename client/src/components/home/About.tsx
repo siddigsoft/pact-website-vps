@@ -1,15 +1,8 @@
 import { useRef, useState, useEffect } from 'react';
 import CountUp from 'react-countup';
 import { useScrollEffect } from '@/hooks/useScrollEffect';
-import { Award, Globe, Users, Handshake, CheckCircle, Calendar, Briefcase, Target, ArrowRight, X, Lightbulb, Shield, TrendingUp, Heart, Sparkles } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Award, Globe, Users, Handshake, CheckCircle, Calendar, Briefcase, Target, Lightbulb, Shield, TrendingUp, Heart, Sparkles } from 'lucide-react';
+import { Link } from 'wouter';
 import { Skeleton, TextSkeleton, FeatureSkeleton } from '@/components/ui/ContentSkeleton';
 
 // Define the AboutContent interface
@@ -60,7 +53,7 @@ const FeatureItem = ({
 const About = () => {
   const [content, setContent] = useState<AboutContent | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  // button now navigates to the About page instead of opening a dialog
   const featureIcons: Record<string, React.ReactNode> = {
     CheckCircle: <CheckCircle className="h-5 w-5" />,
     Award: <Award className="h-5 w-5" />,
@@ -263,68 +256,12 @@ const About = () => {
 
               {/* More Details Button */}
               <div className="mt-auto flex justify-center">
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogTrigger asChild>
-                    <button className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-500 shadow-md hover:shadow-lg group hover:scale-105">
-                      Learn More About Us
-                    </button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-4xl w-[95vw] sm:w-[90vw] md:w-full max-h-[90vh] sm:max-h-[85vh] overflow-hidden flex flex-col duration-600 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-100 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] [&>button]:z-50 [&>button]:w-8 [&>button]:h-8 sm:[&>button]:w-10 sm:[&>button]:h-10 [&>button]:bg-gray-100 [&>button]:hover:bg-gray-200 [&>button]:hover:scale-110 [&>button]:rounded-md [&>button]:right-4 sm:[&>button]:right-6 [&>button]:top-4 sm:[&>button]:top-4 [&>button]:flex [&>button]:items-center [&>button]:justify-center [&>button>svg]:w-5 [&>button>svg]:h-5 sm:[&>button>svg]:w-6 sm:[&>button>svg]:h-6 [&>button>svg]:stroke-[3] [&>button]:transition-all [&>button]:duration-500">
-                    <DialogHeader className="pb-3 sm:pb-4 border-b sticky top-0 bg-white z-40 transition-all duration-500">
-                      <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-navy-900 mb-2 pr-10 sm:pr-12">
-                        About <span className="text-primary">PACT</span> Consultancy
-                      </DialogTitle>
-                      <DialogDescription className="text-sm sm:text-base">
-                        {content.subtitle}
-                      </DialogDescription>
-                    </DialogHeader>
-
-                    <div className="overflow-y-auto flex-1 pr-1 sm:pr-2 scroll-smooth">
-                      <div className="space-y-4 sm:space-y-6 py-2">
-                        <div className="space-y-3 sm:space-y-4">
-                          {paragraphs.map((paragraph, index) => (
-                            <p key={index} className="text-gray-700 leading-relaxed text-sm sm:text-base opacity-0 animate-fade-in" style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'forwards' }}>
-                              {paragraph}
-                            </p>
-                          ))}
-                        </div>
-
-                        {content.features && content.features.length > 0 && (
-                          <div className="mt-6 sm:mt-8">
-                            <h3 className="text-lg sm:text-xl font-semibold text-navy-800 mb-3 sm:mb-4">Our Strengths</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                              {content.features.map((feature, index) => (
-                                <div
-                                  key={index}
-                                  className="flex items-start p-3 sm:p-4 bg-slate-50 rounded-lg border border-slate-200 hover:border-primary/30 transition-all duration-500 hover:shadow-md opacity-0 animate-fade-up"
-                                  style={{ animationDelay: `${(paragraphs.length * 100) + (index * 80)}ms`, animationFillMode: 'forwards' }}
-                                >
-                                  <div className="p-1.5 sm:p-2 rounded-full bg-primary/10 text-primary mr-2 sm:mr-3 mt-1 flex-shrink-0 transition-transform duration-500 hover:scale-110">
-                                    {featureIcons[feature.icon as keyof typeof featureIcons] || <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4" />}
-                                  </div>
-                                  <div>
-                                    <h4 className="font-semibold text-navy-800 mb-1 text-sm sm:text-base">{feature.title}</h4>
-                                    <p className="text-xs sm:text-sm text-gray-600">{feature.description}</p>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {content.image && (
-                          <div className="mt-8 mb-4">
-                            <img
-                              src={content.image}
-                              alt="About PACT Consultancy"
-                              className="w-full h-auto max-h-[400px] rounded-lg shadow-lg object-cover"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                <Link
+                  href="/about"
+                  className="inline-block bg-primary hover:bg-primary/90 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-500 shadow-md hover:shadow-lg"
+                >
+                  Learn More About Us
+                </Link>
               </div>
             </div>
 
