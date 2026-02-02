@@ -91,7 +91,7 @@ export default function CategoryProjects({
                     </div>
                     
                     {/* Title */}
-                    <h3 className={`text-xl sm:text-xl font-semibold mb-3 transition-colors duration-300 break-words ${project.bg_image ? 'text-white group-hover:text-white' : 'text-[#E96D1F]'}`}>
+                    <h3 className={`text-xl sm:text-xl font-semibold mb-3 transition-colors duration-300 break-words ${project.bg_image ? 'text-white group-hover:text-white' : 'text-navy-900'}`}>
                       {project.title}
                     </h3>
                     
