@@ -124,10 +124,11 @@ export default function ProjectsPage() {
       }, {});
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    // add top padding to account for the fixed header so the hero title isn't hidden on mobile
+    <div className="min-h-screen bg-gray-50 pt-20">
       {/* Header Section with Image Background */}
       <div 
-        className="relative w-full bg-primary py-16 sm:py-20 md:py-24 lg:py-32"
+        className="relative w-full bg-primary py-12 sm:py-16 md:py-20 lg:py-28"
       >
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/85 to-primary/70">
@@ -137,14 +138,14 @@ export default function ProjectsPage() {
           <div className="absolute top-40 right-1/4 w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-full blur-xl"></div>
         </div>
         
-        <div className="w-full px-4 relative mx-auto flex flex-col items-center justify-center h-full">
+        <div className="w-full px-4 relative mx-auto flex flex-col items-center justify-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
             className="max-w-6xl mx-auto text-center"
           >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight break-words px-2">
               Our <span className="text-accent">Impactful</span> Projects
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-white mb-6 sm:mb-8">
@@ -246,8 +247,9 @@ export default function ProjectsPage() {
                     // Create an ID for anchor links
                     const categoryId = category.replace(/\s+/g, '-').toLowerCase();
                     
-                    return (
-                      <div key={category} id={categoryId} className="mb-8 sm:mb-12">
+                      return (
+                        // add scroll margin so anchored category sections are not hidden behind the fixed header on mobile
+                        <div key={category} id={categoryId} className="mb-8 sm:mb-12 scroll-mt-20 lg:scroll-mt-24">
                         <CategoryProjects
                           title={category}
                           projects={categoryProjects}

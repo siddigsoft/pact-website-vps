@@ -61,11 +61,12 @@ export default function CategoryProjects({
                 href={`/projects/${project.id}`}
                 className="group block"
               >
-                <div className={`rounded-lg overflow-hidden h-full flex flex-col border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all duration-300 relative
+                <div
+                  className={`rounded-lg overflow-hidden h-full flex flex-col border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all duration-300 relative
                     ${project.bg_image ? 'bg-cover bg-center text-white' : ''}
                     ${project.bg_image ? 'group-hover:after:bg-primary' : ''}
                     after:absolute after:inset-0 after:transition-all after:duration-300 after:z-0
-                    min-h-[400px]
+                    min-h-[320px] sm:min-h-[400px]
                     border-[#1A3A5F] hover:border-primary`}
                   style={project.bg_image ? { backgroundImage: `url('${project.bg_image}')` } : {}}
                 >
@@ -84,24 +85,18 @@ export default function CategoryProjects({
                     </div>
                     
                     {/* Organization */}
-                    <div className="flex items-center text-sm mb-2
-                      ${project.bg_image ? 'text-gray-200 group-hover:text-gray-500' : 'text-primary-foreground/90'}
-                    ">
+                    <div className={`flex items-center text-sm mb-2 ${project.bg_image ? 'text-gray-200 group-hover:text-gray-500' : 'text-primary-foreground/90'}`}>
                       <Building className="h-4 w-4 mr-1" />
                       {project.organization}
                     </div>
                     
                     {/* Title */}
-                    <h3 className="text-xl font-semibold mb-3 transition-colors duration-300
-                      ${project.bg_image ? 'text-white group-hover:text-white' : 'text-[#E96D1F]'}
-                    ">
+                    <h3 className={`text-xl sm:text-xl font-semibold mb-3 transition-colors duration-300 break-words ${project.bg_image ? 'text-white group-hover:text-white' : 'text-[#E96D1F]'}`}>
                       {project.title}
                     </h3>
                     
                     {/* Project Details */}
-                    <div className="flex flex-wrap gap-4 mb-4 text-sm
-                      ${project.bg_image ? 'text-gray-300 group-hover:text-gray-500' : 'text-primary-foreground/90'}
-                    ">
+                    <div className={`flex flex-wrap gap-4 mb-4 text-sm ${project.bg_image ? 'text-gray-300 group-hover:text-gray-500' : 'text-primary-foreground/90'}`}>
                       {project.duration && (
                         <div className="flex items-center">
                           <CalendarDays className="h-4 w-4 mr-1" />

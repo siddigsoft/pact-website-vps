@@ -111,7 +111,6 @@ const LocationDetailPage: React.FC = () => {
                   city={location.city}
                   country={location.country}
                   address={location.address}
-                  height="300px"
                 />
               </div>
 

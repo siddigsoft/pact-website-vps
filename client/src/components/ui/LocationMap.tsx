@@ -28,7 +28,7 @@ const LocationMap: React.FC<LocationMapProps> = ({
   city,
   country,
   address,
-  height = '400px',
+  height,
   zoom = 10 // Better zoom level for regional view
 }) => {
   // Default coordinates (fallback to East Africa region - good center for PACT's operations)
@@ -58,8 +58,11 @@ const LocationMap: React.FC<LocationMapProps> = ({
     );
   }
 
+  // If caller didn't pass an explicit height, use Tailwind responsive heights
+  const responsiveClass = !height ? 'h-48 sm:h-64 md:h-80 lg:h-96' : '';
+
   return (
-    <div style={{ height }} className="rounded-lg relative overflow-hidden">
+    <div style={height ? { height } : undefined} className={`rounded-lg relative overflow-hidden ${responsiveClass}`}>
       <MapContainer
         center={[lat, lng]}
         zoom={zoom}
