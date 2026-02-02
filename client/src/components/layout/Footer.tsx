@@ -196,9 +196,7 @@ const Footer = () => {
             {footerData?.terms_link && (
               <a href={footerData.terms_link} className="text-gray-500 hover:text-accent text-sm">Terms of Service</a>
             )}
-            {footerData?.sitemap_link && (
-              <a href={footerData.sitemap_link} className="text-gray-500 hover:text-accent text-sm">Sitemap</a>
-            )}
+            <Link href="/locations" className="text-gray-500 hover:text-accent text-sm">Sitemap</Link>
           </div>
         </div>
       </div>

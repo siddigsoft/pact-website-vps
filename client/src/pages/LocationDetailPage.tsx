@@ -5,6 +5,7 @@ import { Loader2, ArrowLeft, MapPin } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import * as locationsApi from '@/api/locations';
 import type { Location } from '@shared/schema';
+import LocationMap from '@/components/ui/LocationMap';
 
 const LocationDetailPage: React.FC = () => {
   const [, params] = useRoute('/locations/:id');
@@ -101,9 +102,22 @@ const LocationDetailPage: React.FC = () => {
                 </div>
               </div>
 
+              {/* Location Map */}
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-gray-600 mb-3">Location Map</h3>
+                <LocationMap
+                  latitude={location.latitude}
+                  longitude={location.longitude}
+                  city={location.city}
+                  country={location.country}
+                  address={location.address}
+                  height="300px"
+                />
+              </div>
+
               {/* Dynamically render any extra fields returned from the API (phone, email, etc.) */}
               {(() => {
-                const known = new Set(['id','city','country','image','address','created_at','updated_at','updated_by']);
+                const known = new Set(['id','city','country','image','address','latitude','longitude','created_at','updated_at','updated_by']);
                 const extras = Object.entries(location as any).filter(([k, v]) => !known.has(k) && v !== null && v !== undefined && String(v).trim() !== '');
                 if (extras.length === 0) return null;
 

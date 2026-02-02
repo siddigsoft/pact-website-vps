@@ -146,6 +146,8 @@ export const locations = pgTable("locations", {
   country: text("country").notNull(),
   image: text("image"),
   address: text("address"),
+  latitude: text("latitude"),
+  longitude: text("longitude"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
   updated_by: integer("updated_by").references(() => users.id),
@@ -216,6 +218,8 @@ export const insertLocationSchema = z.object({
   country: z.string(),
   image: z.string().nullable().optional(),
   address: z.string().nullable().optional(),
+  latitude: z.string().nullable().optional(),
+  longitude: z.string().nullable().optional(),
   updated_by: z.number().optional(),
 });
 

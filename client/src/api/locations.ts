@@ -5,6 +5,8 @@ type LocationInput = {
   city: string;
   country: string;
   address: string;
+  latitude?: string | null;
+  longitude?: string | null;
   image?: File | string | null;
 };
 
@@ -12,6 +14,8 @@ type LocationUpdate = {
   city?: string;
   country?: string;
   address?: string | null;
+  latitude?: string | null;
+  longitude?: string | null;
   image?: File | string | null;
 };
 
