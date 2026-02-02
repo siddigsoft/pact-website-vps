@@ -415,7 +415,7 @@ const TeamPage = () => {
                         <h3 className="text-2xl font-semibold text-dark mb-2">Our Team</h3>
                         <p className="text-gray-600 mb-4">A range of specialist consultants and subject-matter experts who support our projects and deliver value to our clients.</p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                          {(membersWithCategory.length ? membersWithCategory : filteredMembers).map((member) => (
+                          {filteredMembers.map((member) => (
                             <TeamMemberCard key={member.id} member={member} />
                           ))}
                         </div>
