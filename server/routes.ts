@@ -2527,6 +2527,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/footer", getFooterContent);
   app.post("/api/footer", jwtAuthenticate, updateFooterContent);
 
+  
+
   // Locations
   app.get("/api/locations", getLocations);
   app.get("/api/locations/:id", getLocation);

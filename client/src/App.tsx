@@ -24,6 +24,7 @@ import ContactPage from "@/pages/ContactPage";
 import TeamPage from "@/pages/TeamPage";
 import TeamMemberDetail from "@/pages/TeamMemberDetail";
 import PublicLocationsPage from "@/pages/LocationsPage";
+import LocationDetailPage from '@/pages/LocationDetailPage';
 import AboutPage from "@/pages/AboutPage";
 import ProjectsPage from "@/pages/ProjectsPage";
 import ProjectDetailsPage from "@/pages/ProjectDetailsPage";
@@ -53,6 +54,22 @@ function PublicRouter() {
     // Use custom smooth scroll for better UX
     smoothScrollToTop({ duration: 600 });
   }, [location]);
+
+  // Refresh AOS (animate-on-scroll) when the route changes so elements
+  // that rely on data-aos are re-initialized and visible without a full reload.
+  useEffect(() => {
+    // @ts-ignore - AOS is loaded globally when included in index.html
+    const AOS = (window as any).AOS;
+    if (AOS) {
+      if (typeof AOS.refreshHard === 'function') {
+        AOS.refreshHard();
+      } else if (typeof AOS.refresh === 'function') {
+        AOS.refresh();
+      } else if (typeof AOS.init === 'function') {
+        AOS.init({ duration: 800, once: true, offset: 100 });
+      }
+    }
+  }, [location]);
   
   return (
     <div className="font-sans text-secondary bg-light">
@@ -72,6 +89,7 @@ function PublicRouter() {
           <Route path="/contact" component={ContactPage} />
           <Route path="/team" component={TeamPage} />
           <Route path="/team/:slug" component={TeamMemberDetail} />
+          <Route path="/locations/:id" component={LocationDetailPage} />
           <Route path="/locations" component={PublicLocationsPage} />
           <Route component={NotFound} />
         </Switch>

@@ -6,6 +6,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { MapPin, Mail, Building, Phone, Globe } from 'lucide-react';
+import { Link } from 'wouter';
 import * as locationsApi from '@/api/locations';
 import type { Location } from '@shared/schema';
 
@@ -136,9 +137,10 @@ const Contact = () => {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
               {locations.map((location: Location) => (
-                <div
+                <Link
                   key={location.id}
-                  className="relative group overflow-hidden rounded-lg shadow-md"
+                  href={`/locations/${location.id}`}
+                  className="relative group overflow-hidden rounded-lg shadow-md block"
                   data-aos="fade-up"
                 >
                   {location.image && (
@@ -160,7 +162,7 @@ const Contact = () => {
                       </div>
                     )}
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

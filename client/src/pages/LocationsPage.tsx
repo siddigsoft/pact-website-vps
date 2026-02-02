@@ -1,5 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useEffect } from 'react';
+import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import * as locationsApi from '@/api/locations';
 
@@ -21,7 +23,25 @@ const LocationsPage: React.FC = () => {
     queryFn: locationsApi.getLocations
   });
 
-  const locations = locationsData || [];
+  const locations = locationsData?.data || [];
+  
+  // Ensure AOS (animate-on-scroll) is initialized/refreshed when this page mounts
+  // or when locations data changes. This fixes cases where navigating back
+  // shows elements hidden until a full page refresh because AOS wasn't re-initialized.
+  useEffect(() => {
+    // @ts-ignore - AOS is loaded globally in index.html / App
+    const AOS = (window as any).AOS;
+    if (AOS) {
+      // prefer refreshHard if available (newer AOS), fallback to refresh
+      if (typeof AOS.refreshHard === 'function') {
+        AOS.refreshHard();
+      } else if (typeof AOS.refresh === 'function') {
+        AOS.refresh();
+      } else if (typeof AOS.init === 'function') {
+        AOS.init({ duration: 800, once: true, offset: 100 });
+      }
+    }
+  }, [locationsData]);
   return (
     <div className="pt-20 min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -73,31 +93,32 @@ const LocationsPage: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {locations.map((location: Location, index: number) => (
-              <motion.div
-                key={location.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-              >
-                <div className="aspect-w-16 aspect-h-9">
-                  <img
-                    src={location.image || '/placeholder-location.jpg'}
-                    alt={`${location.city}, ${location.country}`}
-                    className="w-full h-40 sm:h-48 object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      if (!target.src.includes('placeholder')) {
-                        target.src = '/placeholder-location.jpg';
-                      }
-                    }}
-                  />
-                </div>
-                <div className="p-4 sm:p-6">
-                  <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">{location.city}, {location.country}</h3>
-                  <p className="text-gray-600 text-sm sm:text-base">{location.address || 'Location details available upon request'}</p>
-                </div>
-              </motion.div>
+              <Link key={location.id} href={`/locations/${location.id}`} className="block">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                >
+                  <div className="aspect-w-16 aspect-h-9">
+                    <img
+                      src={location.image || '/placeholder-location.jpg'}
+                      alt={`${location.city}, ${location.country}`}
+                      className="w-full h-40 sm:h-48 object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        if (!target.src.includes('placeholder')) {
+                          target.src = '/placeholder-location.jpg';
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="p-4 sm:p-6">
+                    <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">{location.city}, {location.country}</h3>
+                    <p className="text-gray-600 text-sm sm:text-base">{location.address || 'Location details available upon request'}</p>
+                  </div>
+                </motion.div>
+              </Link>
             ))}
           </div>
         </div>

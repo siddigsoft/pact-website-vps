@@ -11,7 +11,7 @@ const CTA = () => {
         /> */}
       </div>
       <div className="container mx-auto px-4 md:px-8 relative z-10">
-        <div className="max-w-3xl mx-auto text-center" data-aos="fade-up">
+        <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Drive Meaningful Change?</h2>
           <p className="text-xl text-white mb-8">
             Partner with PACT to create sustainable solutions that transform organizations and communities.
