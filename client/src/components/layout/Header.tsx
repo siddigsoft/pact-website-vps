@@ -1,14 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'wouter';
 import { cn } from '@/lib/utils';
 import pactLogo from '@/assets/pact-logo.png';
 import { Menu, X, Search } from 'lucide-react';
+
+import { getServices } from '@/api/services';
+import { getProjects } from '@/api/projects';
+import { getArticles } from '@/api/articles';
+import { getTeamMembers } from '@/api/team';
+import { getClients } from '@/api/clients';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [location] = useLocation();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isLoadingResults, setIsLoadingResults] = useState(false);
+  const [allContent, setAllContent] = useState<any[] | null>(null);
+  const [results, setResults] = useState<any[]>([]);
+  const searchDebounceRef = useRef<number | null>(null);
 
   // Handle scroll effect
   useEffect(() => {
@@ -29,6 +40,80 @@ const Header = () => {
     setSearchOpen(!searchOpen);
     if (mobileMenuOpen) setMobileMenuOpen(false);
   };
+
+  // Load all content when search first opens
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      if (!searchOpen || allContent) return;
+      setIsLoadingResults(true);
+      try {
+        const [servicesRes, projectsRes, articlesRes, teamRes, clientsRes] = await Promise.allSettled([
+          getServices(),
+          getProjects(),
+          getArticles(true),
+          getTeamMembers(),
+          getClients(),
+        ]);
+        const combined: any[] = [];
+
+        const extractArray = (res: any) => {
+          if (!res || res.status !== 'fulfilled') return [];
+          const v = res.value;
+          if (Array.isArray(v)) return v;
+          if (Array.isArray(v?.data)) return v.data;
+          if (Array.isArray(v?.data?.data)) return v.data.data;
+          return [];
+        };
+
+        const services = extractArray(servicesRes);
+        const projects = extractArray(projectsRes);
+        const articles = extractArray(articlesRes);
+        const team = extractArray(teamRes);
+        const clients = extractArray(clientsRes);
+
+        services.forEach((s: any) => combined.push({ type: 'Service', title: s.title, excerpt: s.description, id: s.id, url: `/service/${s.id}` }));
+        projects.forEach((p: any) => combined.push({ type: 'Project', title: p.title, excerpt: p.description, id: p.id, url: `/projects/${p.id}` }));
+        articles.forEach((a: any) => combined.push({ type: 'Article', title: a.title, excerpt: a.excerpt || a.content?.slice(0, 150), id: a.id, url: `/news/${a.slug}` }));
+        team.forEach((m: any) => combined.push({ type: 'Team', title: m.name, excerpt: m.position, id: m.id, url: `/team/${m.slug}` }));
+        clients.forEach((c: any) => combined.push({ type: 'Client', title: c.name, excerpt: c.description, id: c.id, url: `/clients` }));
+
+        if (mounted) setAllContent(combined);
+      } catch (err) {
+        // ignore - results will remain empty
+        console.error('Search load error', err);
+      } finally {
+        if (mounted) setIsLoadingResults(false);
+      }
+    };
+
+    load();
+
+    return () => { mounted = false; };
+  }, [searchOpen, allContent]);
+
+  // Debounced filtering of the loaded content
+  useEffect(() => {
+    if (!allContent) return;
+    if (searchDebounceRef.current) window.clearTimeout(searchDebounceRef.current);
+
+    searchDebounceRef.current = window.setTimeout(() => {
+      const q = searchQuery.trim().toLowerCase();
+      if (!q) {
+        setResults([]);
+        return;
+      }
+
+      const filtered = allContent.filter((item: any) => {
+        const hay = `${item.title ?? ''} ${item.excerpt ?? ''} ${item.type ?? ''}`.toLowerCase();
+        return hay.includes(q);
+      });
+
+      setResults(filtered.slice(0, 20));
+    }, 220);
+
+    return () => { if (searchDebounceRef.current) window.clearTimeout(searchDebounceRef.current); };
+  }, [searchQuery, allContent]);
 
   // Close mobile menu when changing location
   useEffect(() => {
@@ -146,23 +231,62 @@ const Header = () => {
       
       {/* Search overlay */}
       <div className={cn(
-        "absolute w-full bg-primary/95 shadow-lg transition-all duration-300 overflow-hidden z-50", 
-        searchOpen ? "max-h-40" : "max-h-0"
+        "absolute w-full bg-white shadow-lg transition-all duration-300 overflow-hidden z-50 border-b border-gray-200", 
+        searchOpen ? "max-h-96" : "max-h-0"
       )}>
-        <div className="container mx-auto px-4 md:px-8 py-6">
+        <div className="container mx-auto px-4 md:px-8 py-4">
           <div className="relative">
             <input 
               type="text" 
-              className="w-full bg-transparent border-b-2 border-white/30 focus:border-accent py-2 pl-10 pr-4 text-lg outline-none text-white" 
-              placeholder="Search..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-white border-b-2 border-gray-200 focus:border-accent py-2 pl-10 pr-4 text-lg outline-none text-gray-900" 
+              placeholder="Search the site (services, projects, news, team, clients)..." 
+              aria-label="Global site search"
             />
-            <Search className="absolute left-0 top-1/2 transform -translate-y-1/2 text-white/60 w-6 h-6" />
+            <Search className="absolute left-0 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
             <button 
-              onClick={toggleSearch}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-accent"
+              onClick={() => { setSearchQuery(''); setSearchOpen(false); }}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-accent"
+              aria-label="Close search"
             >
               <X className="w-6 h-6" />
             </button>
+          </div>
+
+          {/* Results */}
+          <div className="mt-4 max-h-72 overflow-auto">
+            {isLoadingResults && (
+              <div className="text-gray-600">Loading search index...</div>
+            )}
+
+            {!isLoadingResults && !allContent && (
+              <div className="text-gray-600">Open search to load site content.</div>
+            )}
+
+            {!isLoadingResults && allContent && searchQuery.trim().length === 0 && (
+              <div className="text-gray-600">Type to search across services, projects, news, team and clients.</div>
+            )}
+
+            {!isLoadingResults && results.length === 0 && allContent && searchQuery.trim().length > 0 && (
+              <div className="text-gray-600">No results found for "{searchQuery}".</div>
+            )}
+
+            <ul className="divide-y divide-gray-100">
+              {results.map((r, idx) => (
+                <li key={`${r.type}-${r.id}-${idx}`}>
+                  <a
+                    href={r.url}
+                    onClick={(e) => { e.preventDefault(); navigateTo(r.url)(e as any); }}
+                    className="block p-3 hover:bg-gray-50 text-gray-900"
+                  >
+                    <div className="text-sm text-gray-500">{r.type}</div>
+                    <div className="font-medium text-gray-900">{r.title}</div>
+                    {r.excerpt && <div className="text-sm text-gray-700 mt-1">{r.excerpt}</div>}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
