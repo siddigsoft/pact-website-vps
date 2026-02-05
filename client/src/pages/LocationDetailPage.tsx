@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRoute } from 'wouter';
 import { Link } from 'wouter';
-import { Loader2, ArrowLeft, MapPin } from 'lucide-react';
+import { Loader2, ArrowLeft, MapPin, ImageIcon, AlertCircle } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import * as locationsApi from '@/api/locations';
 import type { Location } from '@shared/schema';
@@ -10,8 +10,10 @@ import LocationMap from '@/components/ui/LocationMap';
 const LocationDetailPage: React.FC = () => {
   const [, params] = useRoute('/locations/:id');
   const id = params?.id;
+  const [imageLoading, setImageLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['location', id],
     queryFn: async () => {
       if (!id) return null;
@@ -21,6 +23,8 @@ const LocationDetailPage: React.FC = () => {
       return (res && (res.data || res)) || null;
     },
     enabled: !!id,
+    retry: 2,
+    retryDelay: 1000,
   });
 
   const location: Location | null = data || null;
@@ -44,11 +48,20 @@ const LocationDetailPage: React.FC = () => {
         <div className="container mx-auto px-4 md:px-8">
           <div className="text-center py-12">
             <div className="bg-red-50 p-6 rounded-lg max-w-xl mx-auto">
+              <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-red-700 mb-4">Error</h2>
               <p className="text-red-600 mb-6">{(error as any)?.message || 'Location not found'}</p>
-              <Link href="/locations" className="text-primary hover:underline">
-                Return to Locations
-              </Link>
+              <div className="flex gap-4 justify-center">
+                <button
+                  onClick={() => refetch()}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                >
+                  Try Again
+                </button>
+                <Link href="/locations" className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">
+                  Return to Locations
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -84,11 +97,6 @@ const LocationDetailPage: React.FC = () => {
       {/* Details */}
       <div className="container mx-auto px-4 md:px-8 py-12">
         <div className="bg-white rounded-lg shadow-md p-8">
-          {imageUrl && (
-            <div className="mb-6">
-              <img src={imageUrl} alt={`${location.city}, ${location.country}`} className="w-full h-72 object-cover rounded" />
-            </div>
-          )}
 
           <div className="grid grid-cols-1 gap-6">
             <div>
@@ -101,6 +109,54 @@ const LocationDetailPage: React.FC = () => {
                   <p className="text-gray-800 mt-1 whitespace-pre-wrap">{location.address || 'Address not provided'}</p>
                 </div>
               </div>
+
+              {/* Location Image */}
+              {imageUrl && (
+                <div className="mb-6">
+                  <h3 className="text-sm font-medium text-gray-600 mb-3">Location Image</h3>
+                  <div className="relative rounded-lg overflow-hidden bg-gray-100" style={{ height: '288px' }}>
+                    {imageLoading && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-center">
+                          <Loader2 className="w-8 h-8 animate-spin mx-auto text-gray-400" />
+                          <p className="text-sm text-gray-600 mt-2">Loading image...</p>
+                        </div>
+                      </div>
+                    )}
+                    {imageError ? (
+                      <div className="absolute inset-0 flex items-center justify-center text-gray-500">
+                        <div className="text-center">
+                          <ImageIcon className="w-12 h-12 mx-auto mb-2" />
+                          <p className="text-sm">Image failed to load</p>
+                          <p className="text-xs mt-1 text-gray-400">Click to retry</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <img
+                        src={imageUrl}
+                        alt={`${location.city}, ${location.country}`}
+                        className="w-full h-full object-cover"
+                        onLoad={() => setImageLoading(false)}
+                        onError={() => {
+                          setImageLoading(false);
+                          setImageError(true);
+                        }}
+                        style={{ display: imageLoading ? 'none' : 'block' }}
+                      />
+                    )}
+                    {imageError && (
+                      <button
+                        onClick={() => {
+                          setImageError(false);
+                          setImageLoading(true);
+                        }}
+                        className="absolute inset-0 w-full h-full bg-transparent"
+                        aria-label="Retry loading image"
+                      />
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Location Map */}
               <div className="mb-6">

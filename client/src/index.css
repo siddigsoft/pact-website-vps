@@ -337,3 +337,39 @@
   }
 }
 
+/* Leaflet popup mobile optimizations */
+.leaflet-popup-mobile .leaflet-popup-content-wrapper {
+  @apply rounded-lg shadow-lg;
+}
+
+.leaflet-popup-mobile .leaflet-popup-content {
+  @apply p-2;
+}
+
+.leaflet-popup-mobile .leaflet-popup-tip {
+  @apply shadow-sm;
+}
+
+/* Ensure popup doesn't get cut off on mobile */
+@media (max-width: 640px) {
+  .leaflet-popup {
+    @apply transform-none;
+  }
+  
+  .leaflet-popup-content-wrapper {
+    max-width: 280px;
+  }
+}
+
+/* Recenter button enhancements */
+.leaflet-container .recenter-button {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.leaflet-container .recenter-button:hover {
+  @apply scale-105 shadow-xl;
+}
+
+.leaflet-container .recenter-button:active {
+  @apply scale-95;
+}
